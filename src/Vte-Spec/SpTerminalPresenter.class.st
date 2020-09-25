@@ -9,6 +9,13 @@ Class {
 	#category : #'Vte-Spec'
 }
 
+{ #category : #accessing }
+SpTerminalPresenter >> feed: aString [
+
+	GtkRunLoop defer: [ 
+		terminal feed: aString ]
+]
+
 { #category : #initialization }
 SpTerminalPresenter >> initializePresenters [
 
