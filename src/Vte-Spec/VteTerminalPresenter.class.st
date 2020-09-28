@@ -1,5 +1,5 @@
 Class {
-	#name : #SpTerminalPresenter,
+	#name : #VteTerminalPresenter,
 	#superclass : #SpPresenter,
 	#instVars : [
 		'scrollBar',
@@ -9,15 +9,21 @@ Class {
 	#category : #'Vte-Spec'
 }
 
-{ #category : #accessing }
-SpTerminalPresenter >> feed: aString [
+{ #category : #api }
+VteTerminalPresenter >> feed: aString [
 
 	GtkRunLoop defer: [ 
 		terminal feed: aString ]
 ]
 
+{ #category : #api }
+VteTerminalPresenter >> feedLine: aString [
+
+	^ self feed: aString, String crlf
+]
+
 { #category : #initialization }
-SpTerminalPresenter >> initializePresenters [
+VteTerminalPresenter >> initializePresenters [
 
 	terminal := VteTerminal new.
 	scrollBar := GtkScrollBar newVerticalAdjustment: terminal vAdjustment.
