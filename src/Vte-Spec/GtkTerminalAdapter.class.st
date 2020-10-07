@@ -119,6 +119,12 @@ GtkTerminalAdapter >> initialize [
 	self resetInputStream
 ]
 
+{ #category : #'private accessing' }
+GtkTerminalAdapter >> innerWidget [
+
+	^ innerWidget
+]
+
 { #category : #private }
 GtkTerminalAdapter >> resetInputStream [
 
