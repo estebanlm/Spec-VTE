@@ -1,108 +1,174 @@
 Class {
 	#name : #VteTerminalPresenter,
-	#superclass : #SpPresenter,
+	#superclass : #SpAbstractWidgetPresenter,
+	#traits : 'SpTContextMenu',
+	#classTraits : 'SpTContextMenu classTrait',
 	#instVars : [
-		'scrollBar',
-		'box',
-		'terminal',
-		'inputStream',
-		'commandHandlers'
+		'#commandHandlers',
+		'#editionContextMenu'
 	],
 	#category : #'Vte-Spec'
 }
 
-{ #category : #private }
-VteTerminalPresenter >> announceCommandReceived: commandString [
+{ #category : #specs }
+VteTerminalPresenter class >> adapterName [
 
-	commandHandlers ifNil: [ ^ self ].
-	commandHandlers do: [ :each | 
-		each cull: commandString ]
+	^ #TerminalAdapter
 ]
 
-{ #category : #private }
-VteTerminalPresenter >> characterReceived: aCharacter [
+{ #category : #commands }
+VteTerminalPresenter class >> buildEditionCommandsGroupFor: presenterInstance [
+	| rootCommandGroup |
+
+	rootCommandGroup := CmCommandGroup forSpec beRoot.
+	self 
+		buildEditionCommandsGroupWith: presenterInstance 
+		forRoot: rootCommandGroup.
 	
-	inputStream << aCharacter.
-	terminal feed: aCharacter asString
+	^ rootCommandGroup
 ]
 
-{ #category : #api }
+{ #category : #commands }
+VteTerminalPresenter class >> buildEditionCommandsGroupWith: presenter forRoot: aCmCommandsGroup [
+
+	aCmCommandsGroup beDisplayedAsGroup.
+	aCmCommandsGroup register: (self textEditionCommandsGroupWith: presenter)
+]
+
+{ #category : #commands }
+VteTerminalPresenter class >> textEditionCommandsGroupWith: aPresenter [
+	| group |
+
+	group := (CmCommandGroup named: 'Selection edition commands') asSpecGroup.
+	group
+		description: 'Edit code selection.';
+		beDisplayedAsGroup.
+	
+	VteTextEditionCommand allSubclassesDo: [ :commandClass | 
+		group register: (commandClass forSpecContext: aPresenter) ].
+	
+	^ group
+]
+
+{ #category : #private }
+VteTerminalPresenter >> buildContextKeyBindingsWith: aCategory [
+	| category |
+	
+	category := self newContextMenuKeyBindings.
+	aCategory ifNotNil: [ 
+		aCategory allEntries keymaps do: [ :each |
+			category addKeymapEntry: each ] ].
+	
+	^ category
+]
+
+{ #category : #'api-shortcuts' }
+VteTerminalPresenter >> contextKeyBindings [
+
+	^ self buildContextKeyBindingsWith: super contextKeyBindings
+]
+
+{ #category : #'command support' }
+VteTerminalPresenter >> contextMenu [
+	"Answer context menu or nil if there is none defined.
+	 Context menu can be an instace of `SpMenuPresenter` or a block (that will answer eventually an 
+	 instance of `SpMenuPresenter` aswell. 
+	 If your context menu is defined through a block it means is dynamic, and it will be evaluated 
+	 each time the context menu is invoked."
+
+	^ contextMenu
+]
+
+{ #category : #'command support' }
+VteTerminalPresenter >> contextMenu: aValuableOrMenuPresenter [
+	"Set the context menu.
+	 Context menu can be an instace of `SpMenuPresenter` or a block (that will answer eventually an 
+	 instance of `SpMenuPresenter` aswell. 
+	 If your context menu is defined through a block it means is dynamic, and it will be evaluated 
+	 each time the context menu is invoked."
+
+	contextMenu := aValuableOrMenuPresenter
+]
+
+{ #category : #'command support' }
+VteTerminalPresenter >> copySelection [
+	
+	self withAdapterDo: [ :anAdapter | 
+		anAdapter copySelection ]
+]
+
+{ #category : #private }
+VteTerminalPresenter >> editionCommandsGroup [
+
+	^ SpRecursiveContextSetter
+		visit: (self class buildEditionCommandsGroupFor: self defaultCommandsContext) 
+		toSetContext: self defaultCommandsContext
+]
+
+{ #category : #private }
+VteTerminalPresenter >> editionContextKeyBindings [
+
+	^ self editionCommandsGroup asKMCategory
+]
+
+{ #category : #private }
+VteTerminalPresenter >> editionContextMenu [
+
+	^ self editionCommandsGroup asMenuPresenter
+]
+
+{ #category : #'command support' }
 VteTerminalPresenter >> feed: aString [
 
-	GtkRunLoop defer: [ 
-		terminal feed: aString ]
+	self withAdapterDo: [ :anAdapter |
+		anAdapter feed: aString ]
 ]
 
-{ #category : #api }
+{ #category : #'command support' }
 VteTerminalPresenter >> feedLine: aString [
 
-	^ self feed: aString, self newLine
+	^ self feed: aString, String cr
 ]
 
-{ #category : #private }
-VteTerminalPresenter >> flushInputStream [
-	| commandString |
-	
-	commandString := inputStream contents.
-	self resetInputStream.
-	self announceCommandReceived: commandString
-]
+{ #category : #testing }
+VteTerminalPresenter >> hasEditionContextMenu [
 
-{ #category : #private }
-VteTerminalPresenter >> handleKeyEvent: event [
-
-	event isReturn ifTrue: [
-		self flushInputStream.
-		self feed: self newLine.
-		^ true ].
-
-	(event keyValue between: 27 and: 127) ifTrue: [ 
-		self characterReceived: event keyCharacter.
-		^ true ].
-
-	^ false
+	^ editionContextMenu
 ]
 
 { #category : #initialization }
 VteTerminalPresenter >> initialize [
 
 	super initialize.
-	self resetInputStream
-]
-
-{ #category : #initialization }
-VteTerminalPresenter >> initializePresenters [
-
-	terminal := VteTerminal new
-		connectKeyPressEvent: [ :event | self handleKeyEvent: event ];
-		yourself.
-	scrollBar := GtkScrollBar newVerticalAdjustment: terminal vAdjustment.
-
-	layout := SpBoxLayout newHorizontal
-		add: (self newGtkWidget 
-			widget: ((box := GtkBox newHorizontal)
-				packStart: terminal expand: true;
-				packStart: scrollBar expand: false;
-				showAll));
-			yourself;
-		yourself
+	self withEditionContextMenu
 ]
 
 { #category : #private }
-VteTerminalPresenter >> newLine [
+VteTerminalPresenter >> newContextMenuKeyBindings [
 	
-	^ String crlf
+	^ self editionCommandsGroup asKMCategory
 ]
 
-{ #category : #private }
-VteTerminalPresenter >> resetInputStream [
-
-	inputStream := String new writeStream
-]
-
-{ #category : #'api-events' }
+{ #category : #enumerating }
 VteTerminalPresenter >> whenCommandReceivedDo: aBlock [
 
-	commandHandlers ifNil: [ commandHandlers := #() ].
-	commandHandlers := commandHandlers copyWith: aBlock
+	
+]
+
+{ #category : #'command support' }
+VteTerminalPresenter >> withEditionContextMenu [
+	"Enables edition context menu. When this option is selected, right-clicking in the text area 
+	 will show a standard edition menu (copy, cut, copy&paste). 
+	 Adding your own context menu (See `SpAbstractTextPresenter>>#contextMenu:`) will make both 
+	 menus (edition and your own) to be combined into one single context menu."
+
+	editionContextMenu := true
+]
+
+{ #category : #'command support' }
+VteTerminalPresenter >> withoutEditionContextMenu [
+	"Disable default edition context menu. 
+	 See also `SpTextPresenter>>#withEditionContextMenu`."
+
+	editionContextMenu := false
 ]

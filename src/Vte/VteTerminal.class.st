@@ -134,6 +134,22 @@ VteTerminal >> colorHighlightForeground: foreground [
 		module: VteLibrary
 ]
 
+{ #category : #'accessing copy-paste' }
+VteTerminal >> copyClipboardHTML [
+
+	^ self 
+		ffiCall: #(void vte_terminal_copy_clipboard_format (self, gint 2))
+		module: VteLibrary
+]
+
+{ #category : #'accessing copy-paste' }
+VteTerminal >> copyClipboardText [
+
+	^ self 
+		ffiCall: #(void vte_terminal_copy_clipboard_format (self, gint 1))
+		module: VteLibrary
+]
+
 { #category : #accessing }
 VteTerminal >> cursorShape [
 
@@ -199,6 +215,14 @@ VteTerminal >> mouseAutohide: setting [
 
 	self 
 		ffiCall: #(void vte_terminal_set_mouse_autohide (self, gboolean setting))
+		module: VteLibrary
+]
+
+{ #category : #'accessing copy-paste' }
+VteTerminal >> pasteClipboard [
+
+	^ self 
+		ffiCall: #(void vte_terminal_paste_clipboard (self))
 		module: VteLibrary
 ]
 
