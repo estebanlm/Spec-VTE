@@ -102,17 +102,17 @@ VteTerminal >> colorForeground: foreground background: background palette: palet
 			ByteArray 
 				new: (GdkRGBA structureSize * paletteArray size) + 1
 				streamContents: [ :stream | 
-					paletteArray do: [ :each | stream << each gtkRGBA getHandle ].
+					paletteArray do: [ :each | stream << each asGdkRGBA getHandle ].
 					stream << (ByteArray with: 0) ] ]
 		ifEmpty: [ 
 			ExternalAddress null ].
 
 	self 
 		setColorsForeground: (foreground 
-			ifNotNil: [ :c | c gtkRGBA getHandle ] 
+			ifNotNil: [ :c | c asGdkRGBA getHandle ] 
 			ifNil: [ ExternalAddress null ])
 		background: (background 
-			ifNotNil: [ :c | c gtkRGBA getHandle ] 
+			ifNotNil: [ :c | c asGdkRGBA getHandle ] 
 			ifNil: [ ExternalAddress null ])
 		palette: gtkPalette
 		paletteSize: paletteArray size
