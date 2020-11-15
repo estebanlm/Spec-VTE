@@ -74,7 +74,8 @@ GtkTerminalAdapter >> copySelection [
 { #category : #api }
 GtkTerminalAdapter >> feed: aString [
 
-	self innerWidgetDo: [ :w | w feed: (aString withLineEndings: String crlf) ]
+	self innerWidgetDo: [ :w | 
+		w feed: aString withLineEndingTerminal ]
 ]
 
 { #category : #private }
