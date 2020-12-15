@@ -149,12 +149,6 @@ VteTerminalPresenter >> newContextMenuKeyBindings [
 	^ self editionCommandsGroup asKMCategory
 ]
 
-{ #category : #enumerating }
-VteTerminalPresenter >> whenCommandReceivedDo: aBlock [
-
-	
-]
-
 { #category : #'command support' }
 VteTerminalPresenter >> withEditionContextMenu [
 	"Enables edition context menu. When this option is selected, right-clicking in the text area 

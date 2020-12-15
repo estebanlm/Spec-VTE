@@ -60,6 +60,12 @@ GtkTerminalAdapter >> characterReceived: aCharacter [
 ]
 
 { #category : #private }
+GtkTerminalAdapter >> characterWidth [
+	
+	^ self innerWidget pangoContext metrics approximateScaledWidth
+]
+
+{ #category : #private }
 GtkTerminalAdapter >> configureKeyBindings: gtkWidget [
 
 	dispatcher := GtkKMDispatcher on: self presenter
@@ -74,8 +80,11 @@ GtkTerminalAdapter >> copySelection [
 { #category : #api }
 GtkTerminalAdapter >> feed: aString [
 
-	self innerWidgetDo: [ :w | 
-		w feed: aString withLineEndingTerminal ]
+	self innerWidgetDo: [ :w |  
+		w feed: (self isWrapWord 
+			ifTrue: [ self wrapWord: aString ]
+			ifFalse: [ aString ]) 
+			withLineEndingTerminal ]
 ]
 
 { #category : #private }
@@ -127,6 +136,12 @@ GtkTerminalAdapter >> innerWidget [
 ]
 
 { #category : #private }
+GtkTerminalAdapter >> isWrapWord [
+
+	^ false
+]
+
+{ #category : #private }
 GtkTerminalAdapter >> resetInputStream [
 
 	inputStream := String new writeStream
@@ -148,4 +163,16 @@ GtkTerminalAdapter >> wrapWidget: gtkWidget [
 		packStart: innerWidget expand: true;
 		packStart: scrollBar expand: false;
 		showAll
+]
+
+{ #category : #private }
+GtkTerminalAdapter >> wrapWord: aString [
+	| width maxChars |
+
+	width := self innerWidget size x.
+	maxChars := width // self characterWidth.
+	
+	^ aString size <= maxChars 
+		ifTrue: [ aString ]
+		ifFalse: [ aString withNoLineLongerThan: maxChars ].
 ]
