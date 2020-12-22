@@ -2,10 +2,10 @@ Class {
 	#name : #VteTerminalPresenter,
 	#superclass : #SpAbstractWidgetPresenter,
 	#traits : 'SpTContextMenu',
-	#classTraits : 'SpTContextMenu classTrait',
 	#instVars : [
 		'#commandHandlers',
-		'#editionContextMenu'
+		'#editionContextMenu',
+		'#editable'
 	],
 	#category : #'Vte-Spec'
 }
@@ -48,6 +48,20 @@ VteTerminalPresenter class >> textEditionCommandsGroupWith: aPresenter [
 		group register: (commandClass forSpecContext: aPresenter) ].
 	
 	^ group
+]
+
+{ #category : #api }
+VteTerminalPresenter >> beEditable [
+	"Allow edition (deny readonly)."
+
+	self editable: true
+]
+
+{ #category : #api }
+VteTerminalPresenter >> beNotEditable [
+	"Set content text as not editable (readonly)"
+
+	self editable: false
 ]
 
 { #category : #private }
@@ -98,6 +112,12 @@ VteTerminalPresenter >> copySelection [
 ]
 
 { #category : #private }
+VteTerminalPresenter >> editable: aBoolean [
+
+	editable := aBoolean
+]
+
+{ #category : #private }
 VteTerminalPresenter >> editionCommandsGroup [
 
 	^ SpRecursiveContextSetter
@@ -140,7 +160,14 @@ VteTerminalPresenter >> hasEditionContextMenu [
 VteTerminalPresenter >> initialize [
 
 	super initialize.
+	editable := true.
 	self withEditionContextMenu
+]
+
+{ #category : #testing }
+VteTerminalPresenter >> isEditable [
+
+	^ editable
 ]
 
 { #category : #private }

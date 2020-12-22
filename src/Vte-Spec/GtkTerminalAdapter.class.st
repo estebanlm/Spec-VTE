@@ -102,7 +102,10 @@ GtkTerminalAdapter >> handleKeyEvent: event [
 
 	wasHandled := super handleKeyEvent: event.
 	wasHandled ifTrue: [ ^ wasHandled ].
-	
+
+	"Do not listen to keyboard if this is not editable"
+	self presenter isEditable ifFalse: [ ^ false  ].
+		
 	event isReturn ifTrue: [ 
 		self flushInputStream.
 		self feed: String crlf.
