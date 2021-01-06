@@ -194,6 +194,38 @@ VteTerminal >> feedChild: text length: length [
 		module: VteLibrary
 ]
 
+{ #category : #accessing }
+VteTerminal >> font [
+
+	^ self 
+		ffiCall: #(PangoFontDescription *vte_terminal_get_font (self))
+		module: VteLibrary
+]
+
+{ #category : #accessing }
+VteTerminal >> font: font_desc [
+
+	^ self 
+		ffiCall: #(void vte_terminal_set_font (self, PangoFontDescription *font_desc))
+		module: VteLibrary
+]
+
+{ #category : #accessing }
+VteTerminal >> fontScale [
+
+	self 
+		ffiCall: #(gdouble vte_terminal_get_font_scale (self))
+		module: VteLibrary
+]
+
+{ #category : #accessing }
+VteTerminal >> fontScale: scale [
+
+	self 
+		ffiCall: #(void vte_terminal_set_font_scale (self, gdouble scale))
+		module: VteLibrary
+]
+
 { #category : #testing }
 VteTerminal >> isAllowHyperlink [
 
