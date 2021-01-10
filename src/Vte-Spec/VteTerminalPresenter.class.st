@@ -152,7 +152,7 @@ VteTerminalPresenter >> editionContextMenu [
 { #category : #'command support' }
 VteTerminalPresenter >> feed: aString [
 
-	self withAdapterDo: [ :anAdapter |
+	self withAdapterPerformOrDefer: [ :anAdapter |
 		anAdapter feed: aString ]
 ]
 
