@@ -65,6 +65,18 @@ GtkTerminalAdapter >> characterWidth [
 	^ self innerWidget pangoContext metrics approximateScaledWidth
 ]
 
+{ #category : #api }
+GtkTerminalAdapter >> clear [
+
+	self feed: Character escape asString, 'c'	
+]
+
+{ #category : #api }
+GtkTerminalAdapter >> clearScreen [
+
+	self feed: Character escape asString, '[2J'
+]
+
 { #category : #private }
 GtkTerminalAdapter >> configureKeyBindings: gtkWidget [
 

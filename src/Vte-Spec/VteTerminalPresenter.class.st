@@ -76,6 +76,18 @@ VteTerminalPresenter >> buildContextKeyBindingsWith: aCategory [
 	^ category
 ]
 
+{ #category : #api }
+VteTerminalPresenter >> clear [
+
+	self withAdapterDo: [ :anAdapter | anAdapter clear ]
+]
+
+{ #category : #api }
+VteTerminalPresenter >> clearScreen [
+
+	self withAdapterDo: [ :anAdapter | anAdapter clearScreen ]
+]
+
 { #category : #'api-shortcuts' }
 VteTerminalPresenter >> contextKeyBindings [
 
