@@ -37,6 +37,14 @@ VteTerminal class >> example [
 	vte feed: ((String loremIpsum withNoLineLongerThan: 80) withLineEndings: String crlf)
 ]
 
+{ #category : #accessing }
+VteTerminal class >> features [
+
+	^ self 
+		ffiCall: #(char *vte_get_features (void))
+		module: VteLibrary
+]
+
 { #category : #'instance creation' }
 VteTerminal class >> new [
 
@@ -47,6 +55,14 @@ VteTerminal class >> new [
 VteTerminal class >> vteTerminalNew [
 
 	^ self ffiCall: #(VteTerminal *vte_terminal_new()) module: VteLibrary
+]
+
+{ #category : #accessing }
+VteTerminal >> allowBold: allow_bold [
+
+	self 
+		ffiCall: #(void vte_terminal_set_allow_bold (self, gboolean allow_bold))
+		module: VteLibrary
 ]
 
 { #category : #accessing }
@@ -75,7 +91,7 @@ VteTerminal >> beCursorShapeUnderline [
 	self cursorShape: VTE_CURSOR_SHAPE_UNDERLINE
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing colors' }
 VteTerminal >> colorForeground: foreground [
 
 	^ self 
@@ -83,7 +99,7 @@ VteTerminal >> colorForeground: foreground [
 		module: VteLibrary
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing colors' }
 VteTerminal >> colorForeground: foreground background: background palette: paletteArray [
 	"Taken from VteTerminal comment, see 
 		https://developer.gnome.org/vte/0.48/VteTerminal.html#vte-terminal-set-colors
@@ -97,13 +113,12 @@ VteTerminal >> colorForeground: foreground background: background palette: palet
 	than 0, the new background color is taken from palette [0]."
 	| gtkPalette |
 
-	gtkPalette := paletteArray 
+	gtkPalette := paletteArray
 		ifNotEmpty: [   
 			ByteArray 
-				new: (GdkRGBA structureSize * paletteArray size) + 1
+				new: (GdkRGBA structureSize * paletteArray size)
 				streamContents: [ :stream | 
-					paletteArray do: [ :each | stream << each asGdkRGBA getHandle ].
-					stream << (ByteArray with: 0) ] ]
+					paletteArray do: [ :each | stream << each asGdkRGBA getHandle ] ] ]
 		ifEmpty: [ 
 			ExternalAddress null ].
 
@@ -118,7 +133,7 @@ VteTerminal >> colorForeground: foreground background: background palette: palet
 		paletteSize: paletteArray size
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing colors' }
 VteTerminal >> colorHighlight: foreground [
 
 	^ self 
@@ -126,7 +141,7 @@ VteTerminal >> colorHighlight: foreground [
 		module: VteLibrary
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing colors' }
 VteTerminal >> colorHighlightForeground: foreground [
 
 	^ self 
@@ -227,6 +242,14 @@ VteTerminal >> fontScale: scale [
 ]
 
 { #category : #testing }
+VteTerminal >> isAllowBold [
+
+	self 
+		ffiCall: #(gboolean vte_terminal_get_allow_bold (self))
+		module: VteLibrary
+]
+
+{ #category : #testing }
 VteTerminal >> isAllowHyperlink [
 
 	self 
@@ -239,6 +262,14 @@ VteTerminal >> isMouseAutohide [
 
 	self 
 		ffiCall: #(gboolean vte_terminal_get_mouse_autohide (self))
+		module: VteLibrary
+]
+
+{ #category : #testing }
+VteTerminal >> isRewrapOnResize [
+
+	^ self 
+		ffiCall: #(gboolean vte_terminal_get_rewrap_on_resize (self))
 		module: VteLibrary
 ]
 
@@ -277,4 +308,80 @@ VteTerminal >> setColorsForeground: foreground background: background palette: p
 			"const GdkRGBA *"void *palette,
 			gsize palette_size))
 		module: VteLibrary
+]
+
+{ #category : #'accessing colors' }
+VteTerminal >> setDefaultColors [
+
+	self 
+		ffiCall: #(void vte_terminal_set_default_colors (self))
+		module: VteLibrary
+]
+
+{ #category : #'accessing colors' }
+VteTerminal >> setOther [
+	| palette |
+
+	palette := #( 
+		"Light"
+		"0"'111111'
+		"1"'d36265'
+		"2"'aece91'
+		"3"'e7e18c'
+		"4"'5297cf'
+		"5"'963c59'
+		"6"'5E7175'
+		"7"'bebebe'
+		"Dark"
+		"0"'666666'
+		"1"'ef8171'
+		"2"'cfefb3'
+		"3"'fff796'
+		"4"'74b8ef'
+		"5"'b85e7b'
+		"6"'A3BABF'
+		"7"'ffffff'
+	) 
+	collect: [ :each | GdkRGBA fromHexString: each ].
+	
+	self 
+		colorForeground: nil
+		background: Color black
+		palette: palette
+	
+	
+]
+
+{ #category : #'accessing colors' }
+VteTerminal >> setSolarized [
+	| palette |
+
+	palette := #( 
+		"Light"
+		"0"'eee8d5'
+		"1"'dc322f'
+		"2"'859900'
+		"3"'b58900'
+		"4"'268bd2'
+		"5"'d33682'
+		"6"'2aa198'
+		"7"'eee8d5'
+		"Dark"
+		"0"'cb4b16'
+		"1"'fdf6e3'
+		"2"'586e75'
+		"3"'839496'
+		"4"'657b83'
+		"5"'6c71c4'
+		"6"'586e75'
+		"7"'002b36'
+	) 
+	collect: [ :each | GdkRGBA fromHexString: each ].
+	
+	self 
+		colorForeground: nil
+		background: Color black
+		palette: palette
+	
+	
 ]
