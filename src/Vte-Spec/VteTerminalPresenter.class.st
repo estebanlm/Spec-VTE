@@ -94,7 +94,7 @@ VteTerminalPresenter >> contextKeyBindings [
 	^ self buildContextKeyBindingsWith: super contextKeyBindings
 ]
 
-{ #category : #'command support' }
+{ #category : #api }
 VteTerminalPresenter >> contextMenu [
 	"Answer context menu or nil if there is none defined.
 	 Context menu can be an instace of `SpMenuPresenter` or a block (that will answer eventually an 
@@ -105,7 +105,7 @@ VteTerminalPresenter >> contextMenu [
 	^ contextMenu
 ]
 
-{ #category : #'command support' }
+{ #category : #api }
 VteTerminalPresenter >> contextMenu: aValuableOrMenuPresenter [
 	"Set the context menu.
 	 Context menu can be an instace of `SpMenuPresenter` or a block (that will answer eventually an 

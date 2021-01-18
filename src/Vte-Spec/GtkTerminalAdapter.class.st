@@ -22,7 +22,9 @@ GtkTerminalAdapter >> addMenuTo: vteTerminal [
 	
 	self hasContextMenu ifFalse: [ ^ self ].
 	vteTerminal connectRightClicked: [ :event |
-		self showMenu: nil event: event.
+		self 
+			showMenu: self presenter contextMenu 
+			event: event.
 		true ]
 ]
 
@@ -40,8 +42,11 @@ GtkTerminalAdapter >> addModelTo: vteTerminal [
 GtkTerminalAdapter >> buildMenu: aMenuPresenter [
 	| menuPresenter |
 	
-	menuPresenter := aMenuPresenter 
-		ifNil: [ self presenter newMenu ].
+	menuPresenter := self presenter newMenu.
+	
+	aMenuPresenter ifNotNil: [ 
+		aMenuPresenter menuGroups do: [ :each | 
+			menuPresenter addMenuGroup: each ] ].
 	
 	self presenter hasEditionContextMenu ifTrue: [ 
 		self presenter editionContextMenu menuGroups 
