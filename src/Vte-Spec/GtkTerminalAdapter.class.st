@@ -9,6 +9,13 @@ Class {
 	#category : #'Vte-Spec'
 }
 
+{ #category : #api }
+GtkTerminalAdapter >> addDecoration: aDecoration [
+
+	self innerWidgetDo: [ :w | 
+		aDecoration configure: w withinAdapter: self ]
+]
+
 { #category : #building }
 GtkTerminalAdapter >> addKeyBindingsTo: vteTerminal [
 
@@ -32,7 +39,8 @@ GtkTerminalAdapter >> addMenuTo: vteTerminal [
 GtkTerminalAdapter >> addModelTo: vteTerminal [
 
 	super addModelTo: vteTerminal.
-	
+	self presenter decorations do: [ :each | 
+		each configure: vteTerminal withinAdapter: self ].
 	self addMenuTo: vteTerminal.
 	vteTerminal connectKeyPressEvent: [ :event | 
 		self handleKeyEvent: event ]
@@ -44,14 +52,14 @@ GtkTerminalAdapter >> buildMenu: aMenuPresenter [
 	
 	menuPresenter := self presenter newMenu.
 	
-	aMenuPresenter ifNotNil: [ 
-		aMenuPresenter menuGroups do: [ :each | 
-			menuPresenter addMenuGroup: each ] ].
-	
 	self presenter hasEditionContextMenu ifTrue: [ 
 		self presenter editionContextMenu menuGroups 
 			do: [ :each | menuPresenter addMenuGroup: each ] ].
-	
+
+	aMenuPresenter ifNotNil: [ 
+		aMenuPresenter menuGroups do: [ :each | 
+			menuPresenter addMenuGroup: each ] ].
+		
 	lastMenuShown := menuPresenter buildWithSpec.
 		
 	^ lastMenuShown
@@ -68,6 +76,20 @@ GtkTerminalAdapter >> characterReceived: aCharacter [
 GtkTerminalAdapter >> characterWidth [
 	
 	^ self innerWidget pangoContext metrics approximateScaledWidth
+]
+
+{ #category : #configuring }
+GtkTerminalAdapter >> checkForHyperlink: event [
+
+	event isPrimaryButton ifFalse: [ ^ false ].
+
+	^ self innerWidgetDo: [ :w |
+		(w hyperlinkCheckEvent: event)
+			ifNotNil: [ :aString |
+				self triggerHyperlinkPressed: aString.
+				true ]
+			ifNil: [ 
+				false ] ]
 ]
 
 { #category : #api }
@@ -98,10 +120,9 @@ GtkTerminalAdapter >> copySelection [
 GtkTerminalAdapter >> feed: aString [
 
 	self innerWidgetDo: [ :w |  
-		w feed: (self isWrapWord 
-			ifTrue: [ self wrapWord: aString ]
-			ifFalse: [ aString ]) 
-			withLineEndingTerminal ]
+		| decoratedString |
+		decoratedString := self processDecorations: aString.
+		w feed: decoratedString withLineEndingTerminal ]
 ]
 
 { #category : #private }
@@ -162,9 +183,37 @@ GtkTerminalAdapter >> isWrapWord [
 ]
 
 { #category : #private }
+GtkTerminalAdapter >> processDecorations: aString [
+	| result |
+
+	self presenter decorations isEmptyOrNil 
+		ifTrue: [ ^ aString ].
+	
+	result := aString.
+	self presenter decorations do: [ :aDecoration | 
+		result := aDecoration decorate: result ].
+
+	^ result
+]
+
+{ #category : #private }
 GtkTerminalAdapter >> resetInputStream [
 
 	inputStream := String new writeStream
+]
+
+{ #category : #configuring }
+GtkTerminalAdapter >> setHyperlinksTo: aWidget [
+
+	aWidget allowHyperlink: true.
+	aWidget connectButtonPressEvent: [ :event |
+		self checkForHyperlink: event ].
+]
+
+{ #category : #configuring }
+GtkTerminalAdapter >> triggerHyperlinkPressed: aLink [
+
+	self presenter announce: (VteHyperlinkPressed newLink: aLink)
 ]
 
 { #category : #building }

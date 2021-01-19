@@ -2,10 +2,12 @@ Class {
 	#name : #VteTerminalPresenter,
 	#superclass : #SpAbstractWidgetPresenter,
 	#traits : 'SpTContextMenu',
+	#classTraits : 'SpTContextMenu classTrait',
 	#instVars : [
 		'#commandHandlers',
 		'#editionContextMenu',
-		'#editable'
+		'#editable',
+		'#decorations'
 	],
 	#category : #'Vte-Spec'
 }
@@ -48,6 +50,16 @@ VteTerminalPresenter class >> textEditionCommandsGroupWith: aPresenter [
 		group register: (commandClass forSpecContext: aPresenter) ].
 	
 	^ group
+]
+
+{ #category : #api }
+VteTerminalPresenter >> addDecoration: aDecoration [
+
+	decorations ifNil: [ decorations := #() ].
+	aDecoration presenter: self.
+	decorations := decorations copyWith: aDecoration.
+	self withAdapterDo: [ :anAdapter | 
+		anAdapter addDecoration: aDecoration ]
 ]
 
 { #category : #api }
@@ -123,6 +135,12 @@ VteTerminalPresenter >> copySelection [
 		anAdapter copySelection ]
 ]
 
+{ #category : #api }
+VteTerminalPresenter >> decorations [
+
+	^ decorations
+]
+
 { #category : #private }
 VteTerminalPresenter >> editable: aBoolean [
 
@@ -196,6 +214,12 @@ VteTerminalPresenter >> withEditionContextMenu [
 	 menus (edition and your own) to be combined into one single context menu."
 
 	editionContextMenu := true
+]
+
+{ #category : #api }
+VteTerminalPresenter >> withHyperlinks [
+
+	self addDecoration: VteTerminalHyperlinkDecoration new
 ]
 
 { #category : #'command support' }

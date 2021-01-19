@@ -241,6 +241,19 @@ VteTerminal >> fontScale: scale [
 		module: VteLibrary
 ]
 
+{ #category : #accessing }
+VteTerminal >> hyperlinkCheckEvent: event [ 
+	| checkEventHandle checkEventString |
+
+	checkEventHandle := self vteHyperlinkCheckEvent: event.
+	checkEventHandle isNull ifTrue: [ ^ nil ].
+	
+	checkEventString := checkEventHandle readStringUTF8.
+	checkEventHandle free.
+	
+	^ checkEventString
+]
+
 { #category : #testing }
 VteTerminal >> isAllowBold [
 
@@ -384,4 +397,12 @@ VteTerminal >> setSolarized [
 		palette: palette
 	
 	
+]
+
+{ #category : #private }
+VteTerminal >> vteHyperlinkCheckEvent: event [ 
+
+	^ self 
+		ffiCall: #(void *vte_terminal_hyperlink_check_event (self, GdkEvent *event))
+		module: VteLibrary
 ]
