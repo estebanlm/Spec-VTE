@@ -138,7 +138,7 @@ VteTerminalPresenter >> copySelection [
 { #category : #api }
 VteTerminalPresenter >> decorations [
 
-	^ decorations
+	^ decorations ifNil: [ #() ]
 ]
 
 { #category : #private }
