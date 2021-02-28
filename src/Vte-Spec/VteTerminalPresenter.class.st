@@ -62,6 +62,13 @@ VteTerminalPresenter >> addDecoration: aDecoration [
 		anAdapter addDecoration: aDecoration ]
 ]
 
+{ #category : #'api-ansi' }
+VteTerminalPresenter >> backgroundColor: aColor [
+	"Set RGB color (modern terminals support it)"
+
+	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter backgroundColor: aColor ]
+]
+
 { #category : #api }
 VteTerminalPresenter >> beEditable [
 	"Allow edition (deny readonly)."
@@ -88,16 +95,16 @@ VteTerminalPresenter >> buildContextKeyBindingsWith: aCategory [
 	^ category
 ]
 
-{ #category : #api }
+{ #category : #'api-ansi' }
 VteTerminalPresenter >> clear [
 
-	self withAdapterDo: [ :anAdapter | anAdapter clear ]
+	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter clear ]
 ]
 
-{ #category : #api }
+{ #category : #'api-ansi' }
 VteTerminalPresenter >> clearScreen [
 
-	self withAdapterDo: [ :anAdapter | anAdapter clearScreen ]
+	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter clearScreen ]
 ]
 
 { #category : #'api-shortcuts' }
@@ -133,6 +140,12 @@ VteTerminalPresenter >> copySelection [
 	
 	self withAdapterDo: [ :anAdapter | 
 		anAdapter copySelection ]
+]
+
+{ #category : #'api-ansi' }
+VteTerminalPresenter >> cursorPosition: aPoint [
+	
+	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter cursorPosition: aPoint ]
 ]
 
 { #category : #api }
@@ -180,10 +193,23 @@ VteTerminalPresenter >> feedLine: aString [
 	^ self feed: aString, String cr
 ]
 
+{ #category : #'api-ansi' }
+VteTerminalPresenter >> foregroundColor: aColor [
+	"Set RGB color (modern terminals support it)"
+	
+	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter foregroundColor: aColor ]
+]
+
 { #category : #testing }
 VteTerminalPresenter >> hasEditionContextMenu [
 
 	^ editionContextMenu
+]
+
+{ #category : #'api-ansi' }
+VteTerminalPresenter >> hideCursor [
+	
+	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter hideCursor ]
 ]
 
 { #category : #initialization }
@@ -204,6 +230,36 @@ VteTerminalPresenter >> isEditable [
 VteTerminalPresenter >> newContextMenuKeyBindings [
 	
 	^ self editionCommandsGroup asKMCategory
+]
+
+{ #category : #'api-ansi' }
+VteTerminalPresenter >> reset [
+
+	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter reset ]
+]
+
+{ #category : #'api-ansi' }
+VteTerminalPresenter >> restoreCursor [
+	
+	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter restoreCursor ]
+]
+
+{ #category : #'api-ansi' }
+VteTerminalPresenter >> saveCursor [
+	
+	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter saveCursor ]
+]
+
+{ #category : #'api-ansi' }
+VteTerminalPresenter >> showCursor [
+	
+	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter showCursor ]
+]
+
+{ #category : #api }
+VteTerminalPresenter >> size: aPoint [
+
+	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter size: aPoint ]
 ]
 
 { #category : #'command support' }

@@ -399,6 +399,20 @@ VteTerminal >> setSolarized [
 	
 ]
 
+{ #category : #accessing }
+VteTerminal >> size: aPoint [
+
+	self sizeColumns: aPoint x rows: aPoint y
+]
+
+{ #category : #accessing }
+VteTerminal >> sizeColumns: columns rows: rows [
+
+	self 
+		ffiCall: #(void vte_terminal_set_size (self, glong columns, glong rows))
+		module: VteLibrary
+]
+
 { #category : #private }
 VteTerminal >> vteHyperlinkCheckEvent: event [ 
 

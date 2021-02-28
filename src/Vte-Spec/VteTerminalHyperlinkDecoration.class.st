@@ -40,6 +40,6 @@ VteTerminalHyperlinkDecoration >> configure: aWidget withinAdapter: anAdapter [
 VteTerminalHyperlinkDecoration >> decorate: aString [
 
 	^ aString 
-		escapeAnySubstring: #('http://' 'https://') 
+		escapeAnySubstring: #('http://' 'https://' 'HTTP://' 'HTTPS://' 'Http://' 'Https://') 
 		with: [ :aLink | self addOSCEscapeTo: aLink ]
 ]
