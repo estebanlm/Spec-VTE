@@ -91,6 +91,22 @@ VteTerminal >> beCursorShapeUnderline [
 	self cursorShape: VTE_CURSOR_SHAPE_UNDERLINE
 ]
 
+{ #category : #accessing }
+VteTerminal >> charHeight [
+
+	^ self 
+		ffiCall: #(glong vte_terminal_get_char_height (self))
+		module: VteLibrary
+]
+
+{ #category : #accessing }
+VteTerminal >> charWidth [
+
+	^ self 
+		ffiCall: #(glong vte_terminal_get_char_width (self))
+		module: VteLibrary
+]
+
 { #category : #'accessing colors' }
 VteTerminal >> colorForeground: foreground [
 
