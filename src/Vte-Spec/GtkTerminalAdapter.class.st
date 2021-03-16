@@ -74,6 +74,13 @@ GtkTerminalAdapter >> buildMenu: aMenuPresenter [
 	^ lastMenuShown
 ]
 
+{ #category : #api }
+GtkTerminalAdapter >> charSize [
+
+	^ self innerWidgetDo: [ :w | 
+		 w charWidth @ w charHeight ]
+]
+
 { #category : #private }
 GtkTerminalAdapter >> characterReceived: aCharacter [
 	

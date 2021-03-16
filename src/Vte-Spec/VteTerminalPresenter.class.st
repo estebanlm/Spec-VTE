@@ -95,6 +95,13 @@ VteTerminalPresenter >> buildContextKeyBindingsWith: aCategory [
 	^ category
 ]
 
+{ #category : #api }
+VteTerminalPresenter >> charSize [
+	"The size of a character in the terminal (useful to conversions)"
+	
+	^ self withAdapterDo: [ :anAdapter | anAdapter charSize ]
+]
+
 { #category : #'api-ansi' }
 VteTerminalPresenter >> clear [
 
