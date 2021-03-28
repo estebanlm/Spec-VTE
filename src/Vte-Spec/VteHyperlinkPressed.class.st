@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'link'
 	],
-	#category : #'Vte-Spec'
+	#category : #'Vte-Spec-Decorations'
 }
 
 { #category : #'instance creation' }

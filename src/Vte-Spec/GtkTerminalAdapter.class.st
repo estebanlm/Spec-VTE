@@ -4,9 +4,10 @@ Class {
 	#instVars : [
 		'innerWidget',
 		'lastMenuShown',
-		'inputStream'
+		'inputStream',
+		'cursorHidden'
 	],
-	#category : #'Vte-Spec'
+	#category : #'Vte-Spec-Adapter'
 }
 
 { #category : #api }
@@ -111,7 +112,8 @@ GtkTerminalAdapter >> checkForHyperlink: event [
 { #category : #'api-ansi' }
 GtkTerminalAdapter >> clear [
 
-	self feedEscape: 'c'
+	self feedEscape: 'c'.
+	cursorHidden ifTrue: [ self hideCursor ]
 ]
 
 { #category : #'api-ansi' }
@@ -146,6 +148,13 @@ GtkTerminalAdapter >> feed: aString [
 		| decoratedString |
 		decoratedString := self processDecorations: aString.
 		w feed: decoratedString withLineEndingTerminal ]
+]
+
+{ #category : #api }
+GtkTerminalAdapter >> feedBytes: aByteArray [
+
+	self innerWidgetDo: [ :w |  
+		w feedBytes: aByteArray ]
 ]
 
 { #category : #api }
@@ -205,14 +214,15 @@ GtkTerminalAdapter >> hasContextMenu [
 { #category : #'api-ansi' }
 GtkTerminalAdapter >> hideCursor [
 
+	cursorHidden := true.
 	self feedEscape: '[?25l'
 ]
 
-{ #category : #private }
+{ #category : #initialization }
 GtkTerminalAdapter >> initialize [
 
 	super initialize.
-	self resetInputStream
+	cursorHidden := false
 ]
 
 { #category : #'private accessing' }
@@ -276,6 +286,7 @@ GtkTerminalAdapter >> setHyperlinksTo: aWidget [
 { #category : #'api-ansi' }
 GtkTerminalAdapter >> showCursor [
 
+	cursorHidden := false.
 	self feedEscape: '[?25h'
 ]
 

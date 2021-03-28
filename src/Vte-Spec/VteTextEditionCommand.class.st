@@ -1,5 +1,5 @@
 Class {
 	#name : #VteTextEditionCommand,
 	#superclass : #VteCommand,
-	#category : #'Vte-Spec'
+	#category : #'Vte-Spec-Commands'
 }

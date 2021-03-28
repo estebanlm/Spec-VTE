@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'presenter'
 	],
-	#category : #'Vte-Spec'
+	#category : #'Vte-Spec-Decorations'
 }
 
 { #category : #accessing }

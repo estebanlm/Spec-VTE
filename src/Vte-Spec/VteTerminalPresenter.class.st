@@ -9,7 +9,7 @@ Class {
 		'#editable',
 		'#decorations'
 	],
-	#category : #'Vte-Spec'
+	#category : #'Vte-Spec-Widgets'
 }
 
 { #category : #specs }
@@ -192,6 +192,13 @@ VteTerminalPresenter >> feed: aString [
 
 	self withAdapterPerformOrDefer: [ :anAdapter |
 		anAdapter feed: aString ]
+]
+
+{ #category : #'command support' }
+VteTerminalPresenter >> feedBytes: aByteArray [
+
+	self withAdapterPerformOrDefer: [ :anAdapter |
+		anAdapter feedBytes: aByteArray ]
 ]
 
 { #category : #'command support' }

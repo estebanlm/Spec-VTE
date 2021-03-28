@@ -6,7 +6,7 @@ Class {
 		'OSC8Separator',
 		'ST'
 	],
-	#category : #'Vte-Spec'
+	#category : #'Vte-Spec-Decorations'
 }
 
 { #category : #'class initialization' }

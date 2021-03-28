@@ -1,7 +1,7 @@
 Class {
 	#name : #VteTextCopyCommand,
 	#superclass : #VteTextEditionCommand,
-	#category : #'Vte-Spec'
+	#category : #'Vte-Spec-Commands'
 }
 
 { #category : #defaults }

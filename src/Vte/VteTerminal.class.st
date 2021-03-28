@@ -212,6 +212,20 @@ VteTerminal >> feed: string length: length [
 ]
 
 { #category : #accessing }
+VteTerminal >> feedBytes: aByteArray [
+	
+	self feedBytes: aByteArray length: -1
+]
+
+{ #category : #accessing }
+VteTerminal >> feedBytes: aByteArray length: length [
+
+	self 
+		ffiCall: #(void vte_terminal_feed (self, ByteArray aByteArray, gssize length))
+		module: VteLibrary
+]
+
+{ #category : #accessing }
 VteTerminal >> feedChild: aString [
 
 	self feedChild: aString length: -1
