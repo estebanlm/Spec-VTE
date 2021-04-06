@@ -109,6 +109,12 @@ VteTerminalPresenter >> clear [
 ]
 
 { #category : #'api-ansi' }
+VteTerminalPresenter >> clearLine [
+
+	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter clearLine ]
+]
+
+{ #category : #'api-ansi' }
 VteTerminalPresenter >> clearScreen [
 
 	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter clearScreen ]

@@ -117,6 +117,12 @@ GtkTerminalAdapter >> clear [
 ]
 
 { #category : #'api-ansi' }
+GtkTerminalAdapter >> clearLine [
+
+	self feedEscape: '[2K'
+]
+
+{ #category : #'api-ansi' }
 GtkTerminalAdapter >> clearScreen [
 
 	self feedEscape: '[2J'
