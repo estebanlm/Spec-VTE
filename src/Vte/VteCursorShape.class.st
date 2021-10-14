@@ -1,6 +1,6 @@
 Class {
 	#name : #VteCursorShape,
-	#superclass : #GtkEnumeration,
+	#superclass : #GEnumeration,
 	#classVars : [
 		'VTE_CURSOR_SHAPE_BLOCK',
 		'VTE_CURSOR_SHAPE_IBEAM',
