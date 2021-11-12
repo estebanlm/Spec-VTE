@@ -13,7 +13,7 @@ Class {
 VteTerminal class >> example [ 
 	| vte scrollBar box |
 
-	GtkApplication ensureRunning.
+	GtkEngine ensureRunning.
 
 	vte := self new
 		beCursorShapeIBeam;
@@ -35,6 +35,35 @@ VteTerminal class >> example [
 		showAll.
 
 	vte feed: ((String loremIpsum withNoLineLongerThan: 80) withLineEndings: String crlf)
+]
+
+{ #category : #example }
+VteTerminal class >> example2 [
+	| vte scrollBar box |
+
+	GtkEngine ensureRunning.
+
+	vte := self new
+		beCursorShapeIBeam;
+		allowHyperlink: true;
+		scrollOnOutput: true;
+		mouseAutohide: true;
+		yourself.
+
+	scrollBar := GtkScrollBar newVerticalAdjustment: vte vAdjustment.
+
+	box := GtkBox newHorizontal
+		packStart: vte;
+		packStart: scrollBar expand: false;
+		yourself.
+
+	GtkWindow new 
+		title: 'Vte';
+		add: box;
+		showAll.
+
+	vte feed: ((FileLocator imageDirectory / 'log' / 'LOTJ' / 'log-2021-9-6.txt') 
+		readStreamDo: [ :stream | stream contents  ]).
 ]
 
 { #category : #accessing }
@@ -271,6 +300,17 @@ VteTerminal >> fontScale: scale [
 		module: VteLibrary
 ]
 
+{ #category : #private }
+VteTerminal >> getText [
+
+	^ self 
+		ffiCall: #(char *vte_terminal_get_text (self,
+                       NULL,
+                       NULL,
+                       NULL))
+		module: VteLibrary
+]
+
 { #category : #accessing }
 VteTerminal >> hyperlinkCheckEvent: event [ 
 	| checkEventHandle checkEventString |
@@ -337,6 +377,14 @@ VteTerminal >> scrollOnOutput: scroll [
 
 	self 
 		ffiCall: #(void vte_terminal_set_scroll_on_output (self, gboolean scroll))
+		module: VteLibrary
+]
+
+{ #category : #accessing }
+VteTerminal >> selectAll [
+
+	^ self 
+		ffiCall: #(void vte_terminal_select_all (self))
 		module: VteLibrary
 ]
 
@@ -440,6 +488,20 @@ VteTerminal >> sizeColumns: columns rows: rows [
 
 	self 
 		ffiCall: #(void vte_terminal_set_size (self, glong columns, glong rows))
+		module: VteLibrary
+]
+
+{ #category : #accessing }
+VteTerminal >> text [
+
+	^ self getText
+]
+
+{ #category : #accessing }
+VteTerminal >> unselectAll [
+
+	^ self 
+		ffiCall: #(void vte_terminal_unselect_all (self))
 		module: VteLibrary
 ]
 
