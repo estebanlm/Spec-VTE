@@ -4,7 +4,9 @@ Class {
 	#traits : 'GtkTScrollable',
 	#classTraits : 'GtkTScrollable classTrait',
 	#pools : [
-		'VteCursorShape'
+		'GSpawnFlags',
+		'VteCursorShape',
+		'VtePtyFlags'
 	],
 	#category : #Vte
 }
@@ -74,6 +76,12 @@ VteTerminal class >> features [
 		module: VteLibrary
 ]
 
+{ #category : #'library path' }
+VteTerminal class >> ffiLibraryName [
+
+	^ VteLibrary
+]
+
 { #category : #'instance creation' }
 VteTerminal class >> new [
 
@@ -136,7 +144,7 @@ VteTerminal >> charWidth [
 		module: VteLibrary
 ]
 
-{ #category : #'accessing colors' }
+{ #category : #'accessing - colors' }
 VteTerminal >> colorForeground: foreground [
 
 	^ self 
@@ -144,7 +152,7 @@ VteTerminal >> colorForeground: foreground [
 		module: VteLibrary
 ]
 
-{ #category : #'accessing colors' }
+{ #category : #'accessing - colors' }
 VteTerminal >> colorForeground: foreground background: background palette: paletteArray [
 	"Taken from VteTerminal comment, see 
 		https://developer.gnome.org/vte/0.48/VteTerminal.html#vte-terminal-set-colors
@@ -178,7 +186,7 @@ VteTerminal >> colorForeground: foreground background: background palette: palet
 		paletteSize: paletteArray size
 ]
 
-{ #category : #'accessing colors' }
+{ #category : #'accessing - colors' }
 VteTerminal >> colorHighlight: foreground [
 
 	^ self 
@@ -186,7 +194,7 @@ VteTerminal >> colorHighlight: foreground [
 		module: VteLibrary
 ]
 
-{ #category : #'accessing colors' }
+{ #category : #'accessing - colors' }
 VteTerminal >> colorHighlightForeground: foreground [
 
 	^ self 
@@ -194,7 +202,7 @@ VteTerminal >> colorHighlightForeground: foreground [
 		module: VteLibrary
 ]
 
-{ #category : #'accessing copy-paste' }
+{ #category : #'accessing - copy&paste' }
 VteTerminal >> copyClipboardHTML [
 
 	^ self 
@@ -202,7 +210,7 @@ VteTerminal >> copyClipboardHTML [
 		module: VteLibrary
 ]
 
-{ #category : #'accessing copy-paste' }
+{ #category : #'accessing - copy&paste' }
 VteTerminal >> copyClipboardText [
 
 	^ self 
@@ -266,6 +274,12 @@ VteTerminal >> feedChild: text length: length [
 	self 
 		ffiCall: #(void vte_terminal_feed_child (self, const char *text, gssize length))
 		module: VteLibrary
+]
+
+{ #category : #'library path' }
+VteTerminal >> ffiLibraryName [
+
+	^ VteLibrary
 ]
 
 { #category : #accessing }
@@ -364,7 +378,7 @@ VteTerminal >> mouseAutohide: setting [
 		module: VteLibrary
 ]
 
-{ #category : #'accessing copy-paste' }
+{ #category : #'accessing - copy&paste' }
 VteTerminal >> pasteClipboard [
 
 	^ self 
@@ -401,7 +415,7 @@ VteTerminal >> setColorsForeground: foreground background: background palette: p
 		module: VteLibrary
 ]
 
-{ #category : #'accessing colors' }
+{ #category : #'accessing - colors' }
 VteTerminal >> setDefaultColors [
 
 	self 
@@ -409,7 +423,7 @@ VteTerminal >> setDefaultColors [
 		module: VteLibrary
 ]
 
-{ #category : #'accessing colors' }
+{ #category : #'accessing - colors' }
 VteTerminal >> setOther [
 	| palette |
 
@@ -443,7 +457,7 @@ VteTerminal >> setOther [
 	
 ]
 
-{ #category : #'accessing colors' }
+{ #category : #'accessing - colors' }
 VteTerminal >> setSolarized [
 	| palette |
 
@@ -489,6 +503,79 @@ VteTerminal >> sizeColumns: columns rows: rows [
 	self 
 		ffiCall: #(void vte_terminal_set_size (self, glong columns, glong rows))
 		module: VteLibrary
+]
+
+{ #category : #'accessing - spawn' }
+VteTerminal >> spawnAsync: pty_flags workingDirectory: working_directory argv: argv envv: envv spawnFlags: spawn_flags childSetup: child_setup childSetupData:  child_setup_data childDestroyNotify: child_setup_data_destroy timeout: timeout cancellable: cancellable callback: callback data: user_data [
+	"
+	GSpawnChildSetupFunc: void (*GSpawnChildSetupFunc) (gpointer user_data)
+	GDestroyNotify: void (*GDestroyNotify) (gpointer data)
+	VteTerminalSpawnAsyncCallback void (*VteTerminalSpawnAsyncCallback) (VteTerminal *terminal,
+                                  GPid pid,
+                                  GError *error,
+                                  gpointer user_data)
+	"
+
+	self ffiCall: #(void vte_terminal_spawn_async (
+		self,
+		VtePtyFlags pty_flags,
+		const char *working_directory,
+		"char **"void *argv,
+		"char **"void *envv,
+		GSpawnFlags spawn_flags,
+		"GSpawnChildSetupFunc"void *child_setup,
+		gpointer child_setup_data,
+		"GDestroyNotify"void *child_setup_data_destroy,
+		int timeout,
+		"GCancellable *"GObject *cancellable,
+		"VteTerminalSpawnAsyncCallback"void *callback,
+		gpointer user_data))
+]
+
+{ #category : #'accessing - spawn' }
+VteTerminal >> spawnAsyncDefaultWorkingDirectory: working_directory argv: argv envv: envv spawnFlags: spaen_flags childSetup: child_setup childSetupData:  child_setup_data childDestroyNotify: child_setup_data_destroy timeout: timeout cancellable: cancellable callback: callback data: user_data [
+
+	self 
+		spawnAsync: VTE_PTY_DEFAULT 
+		workingDirectory: working_directory
+		argv: argv 
+		envv: envv 
+		spawnFlags: spaen_flags 
+		childSetup: child_setup 
+		childSetupData:  child_setup_data 
+		childDestroyNotify: child_setup_data_destroy 
+		timeout: timeout 
+		cancellable: cancellable 
+		callback: callback
+		data: user_data
+]
+
+{ #category : #'accessing - spawn' }
+VteTerminal >> spawnAsyncDefaultWorkingDirectory: working_directory command: command spawnFlags: spaen_flags childSetup: child_setup childSetupData:  child_setup_data childDestroyNotify: child_setup_data_destroy timeout: timeout cancellable: cancellable callback: callback data: user_data [
+	| argv commandArg |
+	
+	commandArg := ExternalAddress fromString: command.
+	argv := ExternalAddress allocate: (FFIExternalType pointerSize * 2).
+	argv pointerAt: 1 put: commandArg.
+	argv pointerAt: (1 + FFIExternalType pointerSize) put: ExternalAddress null.
+
+	[
+		self 
+			spawnAsync: VTE_PTY_DEFAULT 
+			workingDirectory: working_directory
+			argv: argv 
+			envv: ExternalAddress null 
+			spawnFlags: spaen_flags 
+			childSetup: child_setup 
+			childSetupData:  child_setup_data 
+			childDestroyNotify: child_setup_data_destroy 
+			timeout: timeout 
+			cancellable: cancellable 
+			callback: callback
+			data: user_data ]
+	ensure: [
+		argv free.
+		commandArg free ].
 ]
 
 { #category : #accessing }
