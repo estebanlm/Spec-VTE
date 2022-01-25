@@ -43,8 +43,8 @@ GtkTerminalAdapter >> addModelTo: vteTerminal [
 	self presenter decorations do: [ :each | 
 		each configure: vteTerminal withinAdapter: self ].
 	self addMenuTo: vteTerminal.
-	vteTerminal connectKeyPressEvent: [ :event | 
-		self handleKeyEvent: event ]
+	"vteTerminal connectKeyPressEvent: [ :event | 
+		self handleKeyEvent: event ]"
 ]
 
 { #category : #'api-ansi' }
@@ -70,7 +70,7 @@ GtkTerminalAdapter >> buildMenu: aMenuPresenter [
 		aMenuPresenter menuGroups do: [ :each | 
 			menuPresenter addMenuGroup: each ] ].
 		
-	lastMenuShown := menuPresenter buildWithSpec.
+	lastMenuShown := menuPresenter build.
 		
 	^ lastMenuShown
 ]
@@ -174,6 +174,7 @@ GtkTerminalAdapter >> feedEscape: aString [
 GtkTerminalAdapter >> flushInputStream [
 	| inputString |
 	
+	inputStream ifNil: [ ^ self ].
 	inputString := inputStream contents.
 	self resetInputStream.
 	self flag: #TODO. "inform input"
