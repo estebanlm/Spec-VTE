@@ -24,7 +24,7 @@ BaselineOfVte >> gtk: spec [
 		spec 
 			repository: 'github://pharo-spec/gtk-bindings';
 			className: 'BaselineOfGtk';			
-			loads: 'Core' ]
+			loads: #('Core' 'GLib-IO') ]
 ]
 
 { #category : #'external projects' }
