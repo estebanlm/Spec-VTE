@@ -282,7 +282,7 @@ VteTerminal >> ffiLibraryName [
 	^ VteLibrary
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing - fonts' }
 VteTerminal >> font [
 
 	^ self 
@@ -290,7 +290,7 @@ VteTerminal >> font [
 		module: VteLibrary
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing - fonts' }
 VteTerminal >> font: font_desc [
 
 	^ self 
@@ -298,7 +298,13 @@ VteTerminal >> font: font_desc [
 		module: VteLibrary
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing - fonts' }
+VteTerminal >> fontNamed: aString [
+
+	self font: (PangoFontDescription newFromString: aString) autoRelease
+]
+
+{ #category : #'accessing - fonts' }
 VteTerminal >> fontScale [
 
 	self 
@@ -306,7 +312,7 @@ VteTerminal >> fontScale [
 		module: VteLibrary
 ]
 
-{ #category : #accessing }
+{ #category : #'accessing - fonts' }
 VteTerminal >> fontScale: scale [
 
 	self 
