@@ -202,6 +202,12 @@ VteTerminal >> colorHighlightForeground: foreground [
 		module: VteLibrary
 ]
 
+{ #category : #accessing }
+VteTerminal >> columnCount [
+
+	^ self ffiCall: #(glong vte_terminal_get_column_count (self))
+]
+
 { #category : #'accessing - copy&paste' }
 VteTerminal >> copyClipboardHTML [
 
@@ -390,6 +396,12 @@ VteTerminal >> pasteClipboard [
 	^ self 
 		ffiCall: #(void vte_terminal_paste_clipboard (self))
 		module: VteLibrary
+]
+
+{ #category : #accessing }
+VteTerminal >> rowCount [
+
+	^ self ffiCall: #(glong vte_terminal_get_row_count (self))
 ]
 
 { #category : #accessing }

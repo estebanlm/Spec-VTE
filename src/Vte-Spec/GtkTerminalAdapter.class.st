@@ -128,6 +128,12 @@ GtkTerminalAdapter >> clearScreen [
 	self feedEscape: '[2J'
 ]
 
+{ #category : #api }
+GtkTerminalAdapter >> columnCount [
+
+	^ self innerWidgetDo: [ :w | w columnCount ]
+]
+
 { #category : #private }
 GtkTerminalAdapter >> configureKeyBindings: gtkWidget [
 
@@ -274,6 +280,12 @@ GtkTerminalAdapter >> resetInputStream [
 GtkTerminalAdapter >> restoreCursor [
 
 	self feedEscape: '[u'
+]
+
+{ #category : #api }
+GtkTerminalAdapter >> rowCount [
+
+	^ self innerWidgetDo: [ :w | w rowCount ]
 ]
 
 { #category : #'api-ansi' }

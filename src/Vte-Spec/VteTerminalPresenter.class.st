@@ -120,6 +120,14 @@ VteTerminalPresenter >> clearScreen [
 	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter clearScreen ]
 ]
 
+{ #category : #api }
+VteTerminalPresenter >> columnCount [
+
+	self withAdapterDo: [ :anAdapter | ^ anAdapter columnCount ].
+	^ 0
+
+]
+
 { #category : #'api-shortcuts' }
 VteTerminalPresenter >> contextKeyBindings [
 
@@ -262,6 +270,14 @@ VteTerminalPresenter >> reset [
 VteTerminalPresenter >> restoreCursor [
 	
 	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter restoreCursor ]
+]
+
+{ #category : #api }
+VteTerminalPresenter >> rowCount [
+
+	self withAdapterDo: [ :anAdapter | ^ anAdapter rowCount ].
+	^ 0
+
 ]
 
 { #category : #'api-ansi' }
