@@ -163,6 +163,13 @@ VteTerminalPresenter >> copySelection [
 		anAdapter copySelection ]
 ]
 
+{ #category : #'command support' }
+VteTerminalPresenter >> copySelectionAsHTML [
+	
+	self withAdapterDo: [ :anAdapter | 
+		anAdapter copySelectionAsHTML ]
+]
+
 { #category : #'api-ansi' }
 VteTerminalPresenter >> cursorPosition: aPoint [
 	

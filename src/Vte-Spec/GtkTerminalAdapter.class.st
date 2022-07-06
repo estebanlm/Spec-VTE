@@ -137,13 +137,20 @@ GtkTerminalAdapter >> columnCount [
 { #category : #private }
 GtkTerminalAdapter >> configureKeyBindings: gtkWidget [
 
-	dispatcher := GtkKMDispatcher on: self presenter
+	"dispatcher := GtkKMDispatcher on: self presenter"
+	super configureKeyBindings: gtkWidget
 ]
 
 { #category : #api }
 GtkTerminalAdapter >> copySelection [
 
 	self innerWidgetDo: [ :w | w copyClipboardText ]
+]
+
+{ #category : #api }
+GtkTerminalAdapter >> copySelectionAsHTML [
+
+	self innerWidgetDo: [ :w | w copyClipboardHTML ]
 ]
 
 { #category : #'api-ansi' }
