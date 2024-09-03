@@ -1,30 +1,32 @@
 Class {
-	#name : #VteTerminalDecoration,
-	#superclass : #Object,
+	#name : 'VteTerminalDecoration',
+	#superclass : 'Object',
 	#instVars : [
 		'presenter'
 	],
-	#category : #'Vte-Spec-Decorations'
+	#category : 'Vte-Spec-Decorations',
+	#package : 'Vte-Spec',
+	#tag : 'Decorations'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminalDecoration >> configure: aWidget withinAdapter: anAdapter [
 	
 ]
 
-{ #category : #decorating }
+{ #category : 'decorating' }
 VteTerminalDecoration >> decorate: aString [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminalDecoration >> presenter [
 
 	^ presenter
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminalDecoration >> presenter: anObject [
 
 	presenter := anObject

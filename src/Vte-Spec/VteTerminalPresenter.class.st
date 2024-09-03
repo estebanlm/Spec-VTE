@@ -1,6 +1,6 @@
 Class {
-	#name : #VteTerminalPresenter,
-	#superclass : #SpAbstractWidgetPresenter,
+	#name : 'VteTerminalPresenter',
+	#superclass : 'SpAbstractWidgetPresenter',
 	#traits : 'SpTContextMenu',
 	#classTraits : 'SpTContextMenu classTrait',
 	#instVars : [
@@ -9,16 +9,18 @@ Class {
 		'#editable',
 		'#decorations'
 	],
-	#category : #'Vte-Spec-Widgets'
+	#category : 'Vte-Spec-Widgets',
+	#package : 'Vte-Spec',
+	#tag : 'Widgets'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 VteTerminalPresenter class >> adapterName [
 
 	^ #TerminalAdapter
 ]
 
-{ #category : #commands }
+{ #category : 'commands' }
 VteTerminalPresenter class >> buildEditionCommandsGroupFor: presenterInstance [
 	| rootCommandGroup |
 
@@ -30,14 +32,14 @@ VteTerminalPresenter class >> buildEditionCommandsGroupFor: presenterInstance [
 	^ rootCommandGroup
 ]
 
-{ #category : #commands }
+{ #category : 'commands' }
 VteTerminalPresenter class >> buildEditionCommandsGroupWith: presenter forRoot: aCmCommandsGroup [
 
 	aCmCommandsGroup beDisplayedAsGroup.
 	aCmCommandsGroup register: (self textEditionCommandsGroupWith: presenter)
 ]
 
-{ #category : #commands }
+{ #category : 'commands' }
 VteTerminalPresenter class >> textEditionCommandsGroupWith: aPresenter [
 	| group |
 
@@ -52,7 +54,7 @@ VteTerminalPresenter class >> textEditionCommandsGroupWith: aPresenter [
 	^ group
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 VteTerminalPresenter >> addDecoration: aDecoration [
 
 	decorations ifNil: [ decorations := #() ].
@@ -62,28 +64,28 @@ VteTerminalPresenter >> addDecoration: aDecoration [
 		anAdapter addDecoration: aDecoration ]
 ]
 
-{ #category : #'api-ansi' }
+{ #category : 'api-ansi' }
 VteTerminalPresenter >> backgroundColor: aColor [
 	"Set RGB color (modern terminals support it)"
 
 	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter backgroundColor: aColor ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 VteTerminalPresenter >> beEditable [
 	"Allow edition (deny readonly)."
 
 	self editable: true
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 VteTerminalPresenter >> beNotEditable [
 	"Set content text as not editable (readonly)"
 
 	self editable: false
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 VteTerminalPresenter >> buildContextKeyBindingsWith: aCategory [
 	| category |
 	
@@ -95,32 +97,32 @@ VteTerminalPresenter >> buildContextKeyBindingsWith: aCategory [
 	^ category
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 VteTerminalPresenter >> charSize [
 	"The size of a character in the terminal (useful to conversions)"
 	
 	^ self withAdapterDo: [ :anAdapter | anAdapter charSize ]
 ]
 
-{ #category : #'api-ansi' }
+{ #category : 'api-ansi' }
 VteTerminalPresenter >> clear [
 
 	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter clear ]
 ]
 
-{ #category : #'api-ansi' }
+{ #category : 'api-ansi' }
 VteTerminalPresenter >> clearLine [
 
 	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter clearLine ]
 ]
 
-{ #category : #'api-ansi' }
+{ #category : 'api-ansi' }
 VteTerminalPresenter >> clearScreen [
 
 	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter clearScreen ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 VteTerminalPresenter >> columnCount [
 
 	self withAdapterDo: [ :anAdapter | ^ anAdapter columnCount ].
@@ -128,13 +130,13 @@ VteTerminalPresenter >> columnCount [
 
 ]
 
-{ #category : #'api-shortcuts' }
+{ #category : 'api-shortcuts' }
 VteTerminalPresenter >> contextKeyBindings [
 
 	^ self buildContextKeyBindingsWith: super contextKeyBindings
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 VteTerminalPresenter >> contextMenu [
 	"Answer context menu or nil if there is none defined.
 	 Context menu can be an instace of `SpMenuPresenter` or a block (that will answer eventually an 
@@ -145,7 +147,7 @@ VteTerminalPresenter >> contextMenu [
 	^ contextMenu
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 VteTerminalPresenter >> contextMenu: aValuableOrMenuPresenter [
 	"Set the context menu.
 	 Context menu can be an instace of `SpMenuPresenter` or a block (that will answer eventually an 
@@ -156,39 +158,39 @@ VteTerminalPresenter >> contextMenu: aValuableOrMenuPresenter [
 	contextMenu := aValuableOrMenuPresenter
 ]
 
-{ #category : #'command support' }
+{ #category : 'command support' }
 VteTerminalPresenter >> copySelection [
 	
 	self withAdapterDo: [ :anAdapter | 
 		anAdapter copySelection ]
 ]
 
-{ #category : #'command support' }
+{ #category : 'command support' }
 VteTerminalPresenter >> copySelectionAsHTML [
 	
 	self withAdapterDo: [ :anAdapter | 
 		anAdapter copySelectionAsHTML ]
 ]
 
-{ #category : #'api-ansi' }
+{ #category : 'api-ansi' }
 VteTerminalPresenter >> cursorPosition: aPoint [
 	
 	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter cursorPosition: aPoint ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 VteTerminalPresenter >> decorations [
 
 	^ decorations ifNil: [ #() ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 VteTerminalPresenter >> editable: aBoolean [
 
 	editable := aBoolean
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 VteTerminalPresenter >> editionCommandsGroup [
 
 	^ SpRecursiveContextSetter
@@ -196,58 +198,58 @@ VteTerminalPresenter >> editionCommandsGroup [
 		toSetContext: self defaultCommandsContext
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 VteTerminalPresenter >> editionContextKeyBindings [
 
 	^ self editionCommandsGroup asKMCategory
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 VteTerminalPresenter >> editionContextMenu [
 
 	^ self editionCommandsGroup asMenuPresenter
 ]
 
-{ #category : #'command support' }
+{ #category : 'command support' }
 VteTerminalPresenter >> feed: aString [
 
 	self withAdapterPerformOrDefer: [ :anAdapter |
 		anAdapter feed: aString ]
 ]
 
-{ #category : #'command support' }
+{ #category : 'command support' }
 VteTerminalPresenter >> feedBytes: aByteArray [
 
 	self withAdapterPerformOrDefer: [ :anAdapter |
 		anAdapter feedBytes: aByteArray ]
 ]
 
-{ #category : #'command support' }
+{ #category : 'command support' }
 VteTerminalPresenter >> feedLine: aString [
 
 	^ self feed: aString, String cr
 ]
 
-{ #category : #'api-ansi' }
+{ #category : 'api-ansi' }
 VteTerminalPresenter >> foregroundColor: aColor [
 	"Set RGB color (modern terminals support it)"
 	
 	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter foregroundColor: aColor ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 VteTerminalPresenter >> hasEditionContextMenu [
 
 	^ editionContextMenu
 ]
 
-{ #category : #'api-ansi' }
+{ #category : 'api-ansi' }
 VteTerminalPresenter >> hideCursor [
 	
 	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter hideCursor ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 VteTerminalPresenter >> initialize [
 
 	super initialize.
@@ -255,31 +257,31 @@ VteTerminalPresenter >> initialize [
 	self withEditionContextMenu
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 VteTerminalPresenter >> isEditable [
 
 	^ editable
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 VteTerminalPresenter >> newContextMenuKeyBindings [
 	
 	^ self editionCommandsGroup asKMCategory
 ]
 
-{ #category : #'api-ansi' }
+{ #category : 'api-ansi' }
 VteTerminalPresenter >> reset [
 
 	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter reset ]
 ]
 
-{ #category : #'api-ansi' }
+{ #category : 'api-ansi' }
 VteTerminalPresenter >> restoreCursor [
 	
 	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter restoreCursor ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 VteTerminalPresenter >> rowCount [
 
 	self withAdapterDo: [ :anAdapter | ^ anAdapter rowCount ].
@@ -287,25 +289,25 @@ VteTerminalPresenter >> rowCount [
 
 ]
 
-{ #category : #'api-ansi' }
+{ #category : 'api-ansi' }
 VteTerminalPresenter >> saveCursor [
 	
 	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter saveCursor ]
 ]
 
-{ #category : #'api-ansi' }
+{ #category : 'api-ansi' }
 VteTerminalPresenter >> showCursor [
 	
 	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter showCursor ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 VteTerminalPresenter >> size: aPoint [
 
 	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter size: aPoint ]
 ]
 
-{ #category : #'command support' }
+{ #category : 'command support' }
 VteTerminalPresenter >> withEditionContextMenu [
 	"Enables edition context menu. When this option is selected, right-clicking in the text area 
 	 will show a standard edition menu (copy, cut, copy&paste). 
@@ -315,13 +317,13 @@ VteTerminalPresenter >> withEditionContextMenu [
 	editionContextMenu := true
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 VteTerminalPresenter >> withHyperlinks [
 
 	self addDecoration: VteTerminalHyperlinkDecoration new
 ]
 
-{ #category : #'command support' }
+{ #category : 'command support' }
 VteTerminalPresenter >> withoutEditionContextMenu [
 	"Disable default edition context menu. 
 	 See also `SpTextPresenter>>#withEditionContextMenu`."

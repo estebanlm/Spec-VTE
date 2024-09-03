@@ -1,13 +1,15 @@
 Class {
-	#name : #VteHyperlinkPressed,
-	#superclass : #Announcement,
+	#name : 'VteHyperlinkPressed',
+	#superclass : 'Announcement',
 	#instVars : [
 		'link'
 	],
-	#category : #'Vte-Spec-Decorations'
+	#category : 'Vte-Spec-Decorations',
+	#package : 'Vte-Spec',
+	#tag : 'Decorations'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 VteHyperlinkPressed class >> newLink: aString [
 
 	^ self new 
@@ -15,13 +17,13 @@ VteHyperlinkPressed class >> newLink: aString [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteHyperlinkPressed >> link [
 
 	^ link
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteHyperlinkPressed >> link: anObject [
 
 	link := anObject

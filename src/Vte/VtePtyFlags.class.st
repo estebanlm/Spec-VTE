@@ -1,6 +1,6 @@
 Class {
-	#name : #VtePtyFlags,
-	#superclass : #GEnumeration,
+	#name : 'VtePtyFlags',
+	#superclass : 'GEnumeration',
 	#classVars : [
 		'VTE_PTY_DEFAULT',
 		'VTE_PTY_NO_CTTY',
@@ -11,58 +11,59 @@ Class {
 		'VTE_PTY_NO_UTMP',
 		'VTE_PTY_NO_WTMP'
 	],
-	#category : #Vte
+	#category : 'Vte',
+	#package : 'Vte'
 }
 
-{ #category : #'accessing enum' }
+{ #category : 'accessing enum' }
 VtePtyFlags class >> VTE_PTY_DEFAULT [
 	"This method was automatically generated"
 	^ VTE_PTY_DEFAULT
 ]
 
-{ #category : #'accessing enum' }
+{ #category : 'accessing enum' }
 VtePtyFlags class >> VTE_PTY_NO_CTTY [
 	"This method was automatically generated"
 	^ VTE_PTY_NO_CTTY
 ]
 
-{ #category : #'accessing enum' }
+{ #category : 'accessing enum' }
 VtePtyFlags class >> VTE_PTY_NO_FALLBACK [
 	"This method was automatically generated"
 	^ VTE_PTY_NO_FALLBACK
 ]
 
-{ #category : #'accessing enum' }
+{ #category : 'accessing enum' }
 VtePtyFlags class >> VTE_PTY_NO_HELPER [
 	"This method was automatically generated"
 	^ VTE_PTY_NO_HELPER
 ]
 
-{ #category : #'accessing enum' }
+{ #category : 'accessing enum' }
 VtePtyFlags class >> VTE_PTY_NO_LASTLOG [
 	"This method was automatically generated"
 	^ VTE_PTY_NO_LASTLOG
 ]
 
-{ #category : #'accessing enum' }
+{ #category : 'accessing enum' }
 VtePtyFlags class >> VTE_PTY_NO_SESSION [
 	"This method was automatically generated"
 	^ VTE_PTY_NO_SESSION
 ]
 
-{ #category : #'accessing enum' }
+{ #category : 'accessing enum' }
 VtePtyFlags class >> VTE_PTY_NO_UTMP [
 	"This method was automatically generated"
 	^ VTE_PTY_NO_UTMP
 ]
 
-{ #category : #'accessing enum' }
+{ #category : 'accessing enum' }
 VtePtyFlags class >> VTE_PTY_NO_WTMP [
 	"This method was automatically generated"
 	^ VTE_PTY_NO_WTMP
 ]
 
-{ #category : #'enum declaration' }
+{ #category : 'enum declaration' }
 VtePtyFlags class >> enumDecl [
 	"
 	self initializeEnumeration.

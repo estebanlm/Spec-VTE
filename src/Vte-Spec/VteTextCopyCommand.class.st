@@ -1,22 +1,24 @@
 Class {
-	#name : #VteTextCopyCommand,
-	#superclass : #VteTextEditionCommand,
-	#category : #'Vte-Spec-Commands'
+	#name : 'VteTextCopyCommand',
+	#superclass : 'VteTextEditionCommand',
+	#category : 'Vte-Spec-Commands',
+	#package : 'Vte-Spec',
+	#tag : 'Commands'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 VteTextCopyCommand class >> defaultIconName [
 	
 	^ nil
 ]
 
-{ #category : #default }
+{ #category : 'default' }
 VteTextCopyCommand class >> defaultName [
 
 	^ 'Copy'
 ]
 
-{ #category : #default }
+{ #category : 'default' }
 VteTextCopyCommand class >> defaultShortcutKey [
 
 	^ $c command mac 
@@ -24,7 +26,7 @@ VteTextCopyCommand class >> defaultShortcutKey [
 		| $c control unix
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 VteTextCopyCommand >> asSpecCommand [
 	| command |
 
@@ -36,19 +38,19 @@ VteTextCopyCommand >> asSpecCommand [
 	^ command
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 VteTextCopyCommand >> defaultIconName [
 
 	^ self class defaultIconName
 ]
 
-{ #category : #execution }
+{ #category : 'execution' }
 VteTextCopyCommand >> execute [
 
 	context copySelection
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 VteTextCopyCommand >> shortcutKey [
 
 	^ self class defaultShortcutKey

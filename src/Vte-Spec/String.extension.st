@@ -1,12 +1,12 @@
-Extension { #name : #String }
+Extension { #name : 'String' }
 
-{ #category : #'*Vte-Spec' }
+{ #category : '*Vte-Spec' }
 String >> withLineEndingTerminal [
 
 	^ self withLineEndingsExtended: self class crlf
 ]
 
-{ #category : #'*Vte-Spec' }
+{ #category : '*Vte-Spec' }
 String >> withLineEndingsExtended: lineEndingString [
 	"Answer a new instance where all occurrences of CRLF, CR, and LF are substituted with the specified line ending string."
 	

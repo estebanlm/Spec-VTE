@@ -1,23 +1,25 @@
 Class {
-	#name : #GtkTerminalAdapter,
-	#superclass : #GtkAdapter,
+	#name : 'GtkTerminalAdapter',
+	#superclass : 'GtkAdapter',
 	#instVars : [
 		'innerWidget',
 		'lastMenuShown',
 		'inputStream',
 		'cursorHidden'
 	],
-	#category : #'Vte-Spec-Adapter'
+	#category : 'Vte-Spec-Adapter',
+	#package : 'Vte-Spec',
+	#tag : 'Adapter'
 }
 
-{ #category : #api }
+{ #category : 'api' }
 GtkTerminalAdapter >> addDecoration: aDecoration [
 
 	self innerWidgetDo: [ :w | 
 		aDecoration configure: w withinAdapter: self ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTerminalAdapter >> addKeyBindingsTo: vteTerminal [
 
 	super addKeyBindingsTo: vteTerminal.
@@ -25,7 +27,7 @@ GtkTerminalAdapter >> addKeyBindingsTo: vteTerminal [
 		self addContextMenuKeyBindings: vteTerminal ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTerminalAdapter >> addMenuTo: vteTerminal [
 	
 	self hasContextMenu ifFalse: [ ^ self ].
@@ -36,7 +38,7 @@ GtkTerminalAdapter >> addMenuTo: vteTerminal [
 		true ]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTerminalAdapter >> addModelTo: vteTerminal [
 
 	super addModelTo: vteTerminal.
@@ -47,7 +49,7 @@ GtkTerminalAdapter >> addModelTo: vteTerminal [
 		self handleKeyEvent: event ]"
 ]
 
-{ #category : #'api-ansi' }
+{ #category : 'api-ansi' }
 GtkTerminalAdapter >> backgroundColor: aColor [
 
 	self feedEscape: ('[48;2;{1};{2};{3}m' format: {
@@ -56,7 +58,7 @@ GtkTerminalAdapter >> backgroundColor: aColor [
 		(aColor blue * 255) asInteger })
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTerminalAdapter >> buildMenu: aMenuPresenter [
 	| menuPresenter |
 	
@@ -75,27 +77,27 @@ GtkTerminalAdapter >> buildMenu: aMenuPresenter [
 	^ lastMenuShown
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkTerminalAdapter >> charSize [
 
 	^ self innerWidgetDo: [ :w | 
 		 w charWidth @ w charHeight ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTerminalAdapter >> characterReceived: aCharacter [
 	
 	inputStream << aCharacter.
 	self feed: aCharacter asString
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTerminalAdapter >> characterWidth [
 	
 	^ self innerWidget pangoContext metrics approximateScaledWidth
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 GtkTerminalAdapter >> checkForHyperlink: event [
 
 	event isPrimaryButton ifFalse: [ ^ false ].
@@ -109,58 +111,58 @@ GtkTerminalAdapter >> checkForHyperlink: event [
 				false ] ]
 ]
 
-{ #category : #'api-ansi' }
+{ #category : 'api-ansi' }
 GtkTerminalAdapter >> clear [
 
 	self feedEscape: 'c'.
 	cursorHidden ifTrue: [ self hideCursor ]
 ]
 
-{ #category : #'api-ansi' }
+{ #category : 'api-ansi' }
 GtkTerminalAdapter >> clearLine [
 
 	self feedEscape: '[2K'
 ]
 
-{ #category : #'api-ansi' }
+{ #category : 'api-ansi' }
 GtkTerminalAdapter >> clearScreen [
 
 	self feedEscape: '[2J'
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkTerminalAdapter >> columnCount [
 
 	^ self innerWidgetDo: [ :w | w columnCount ]
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTerminalAdapter >> configureKeyBindings: gtkWidget [
 
 	"dispatcher := GtkKMDispatcher on: self presenter"
 	super configureKeyBindings: gtkWidget
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkTerminalAdapter >> copySelection [
 
 	self innerWidgetDo: [ :w | w copyClipboardText ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkTerminalAdapter >> copySelectionAsHTML [
 
 	self innerWidgetDo: [ :w | w copyClipboardHTML ]
 ]
 
-{ #category : #'api-ansi' }
+{ #category : 'api-ansi' }
 GtkTerminalAdapter >> cursorPosition: aPoint [
 	"ANSI CUP"
 
 	self feedEscape: ('[{1};{2}H' format: { aPoint y. aPoint x })
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkTerminalAdapter >> feed: aString [
 
 	self innerWidgetDo: [ :w |  
@@ -169,21 +171,21 @@ GtkTerminalAdapter >> feed: aString [
 		w feed: decoratedString withLineEndingTerminal ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkTerminalAdapter >> feedBytes: aByteArray [
 
 	self innerWidgetDo: [ :w |  
 		w feedBytes: aByteArray ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkTerminalAdapter >> feedEscape: aString [
 
 	self innerWidgetDo: [ :w |
 		w feed: Character escape asString, aString ].
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTerminalAdapter >> flushInputStream [
 	| inputString |
 	
@@ -193,7 +195,7 @@ GtkTerminalAdapter >> flushInputStream [
 	self flag: #TODO. "inform input"
 ]
 
-{ #category : #'api-ansi' }
+{ #category : 'api-ansi' }
 GtkTerminalAdapter >> foregroundColor: aColor [
 
 	self feedEscape: ('[38;2;{1};{2};{3}m' format: {
@@ -202,7 +204,7 @@ GtkTerminalAdapter >> foregroundColor: aColor [
 		(aColor blue * 255) asInteger })
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTerminalAdapter >> handleKeyEvent: event [
 	| wasHandled |
 
@@ -224,40 +226,40 @@ GtkTerminalAdapter >> handleKeyEvent: event [
 	^ false
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTerminalAdapter >> hasContextMenu [
 	
 	^ self presenter hasEditionContextMenu
 		or: [ self presenter contextMenu notNil ]
 ]
 
-{ #category : #'api-ansi' }
+{ #category : 'api-ansi' }
 GtkTerminalAdapter >> hideCursor [
 
 	cursorHidden := true.
 	self feedEscape: '[?25l'
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtkTerminalAdapter >> initialize [
 
 	super initialize.
 	cursorHidden := false
 ]
 
-{ #category : #'private accessing' }
+{ #category : 'private accessing' }
 GtkTerminalAdapter >> innerWidget [
 
 	^ innerWidget
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTerminalAdapter >> isWrapWord [
 
 	^ false
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTerminalAdapter >> processDecorations: aString [
 	| result |
 
@@ -271,37 +273,37 @@ GtkTerminalAdapter >> processDecorations: aString [
 	^ result
 ]
 
-{ #category : #'api-ansi' }
+{ #category : 'api-ansi' }
 GtkTerminalAdapter >> reset [
 
 	self feedEscape: '[0m'
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTerminalAdapter >> resetInputStream [
 
 	inputStream := String new writeStream
 ]
 
-{ #category : #'api-ansi' }
+{ #category : 'api-ansi' }
 GtkTerminalAdapter >> restoreCursor [
 
 	self feedEscape: '[u'
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkTerminalAdapter >> rowCount [
 
 	^ self innerWidgetDo: [ :w | w rowCount ]
 ]
 
-{ #category : #'api-ansi' }
+{ #category : 'api-ansi' }
 GtkTerminalAdapter >> saveCursor [
 
 	self feedEscape: '[s'
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 GtkTerminalAdapter >> setHyperlinksTo: aWidget [
 
 	aWidget allowHyperlink: true.
@@ -309,44 +311,45 @@ GtkTerminalAdapter >> setHyperlinksTo: aWidget [
 		self checkForHyperlink: event ].
 ]
 
-{ #category : #'api-ansi' }
+{ #category : 'api-ansi' }
 GtkTerminalAdapter >> showCursor [
 
 	cursorHidden := false.
 	self feedEscape: '[?25h'
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 GtkTerminalAdapter >> size: aPoint [
 
 	self innerWidgetDo: [ :w | w size: aPoint ]
 ]
 
-{ #category : #configuring }
+{ #category : 'configuring' }
 GtkTerminalAdapter >> triggerHyperlinkPressed: aLink [
 
 	self presenter announce: (VteHyperlinkPressed newLink: aLink)
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTerminalAdapter >> widgetClass [
 
 	^ VteTerminal
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 GtkTerminalAdapter >> wrapWidget: gtkWidget [
-	| scrollBar |
+	| scrollbar |
 
 	innerWidget := gtkWidget.
-	scrollBar := GtkScrollBar newVerticalAdjustment: innerWidget vAdjustment.
+	scrollbar := GtkScrollbar newVerticalAdjustment: innerWidget vAdjustment.
+	scrollbar hExpand: false.
 	^ GtkBox newHorizontal
-		packStart: innerWidget expand: true;
-		packStart: scrollBar expand: false;
+		append: innerWidget;
+		append: scrollbar;
 		showAll
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtkTerminalAdapter >> wrapWord: aString [
 	| width maxChars |
 

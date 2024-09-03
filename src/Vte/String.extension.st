@@ -1,6 +1,6 @@
-Extension { #name : #String }
+Extension { #name : 'String' }
 
-{ #category : #'*Vte' }
+{ #category : '*Vte' }
 String >> ansiReplaceAllBoldWithBright [
 	"Answer a copy of the receiver in which all occurrences of oldSubstring have been replaced by newSubstring"
     | index bold |
@@ -22,7 +22,7 @@ String >> ansiReplaceAllBoldWithBright [
 				ifTrue: [ stream next: (self size - index + 1) putAll: self startingAt: index ] ]
 ]
 
-{ #category : #'*Vte' }
+{ #category : '*Vte' }
 String >> escapeAnySubstring: aCollection with: aBlock [
     | index separators |
 	

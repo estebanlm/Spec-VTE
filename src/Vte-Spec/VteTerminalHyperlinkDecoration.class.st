@@ -1,15 +1,17 @@
 Class {
-	#name : #VteTerminalHyperlinkDecoration,
-	#superclass : #VteTerminalDecoration,
+	#name : 'VteTerminalHyperlinkDecoration',
+	#superclass : 'VteTerminalDecoration',
 	#classVars : [
 		'OSC8',
 		'OSC8Separator',
 		'ST'
 	],
-	#category : #'Vte-Spec-Decorations'
+	#category : 'Vte-Spec-Decorations',
+	#package : 'Vte-Spec',
+	#tag : 'Decorations'
 }
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 VteTerminalHyperlinkDecoration class >> initialize [
 
 	OSC8 := Character escape asString, ']8;;'.
@@ -17,7 +19,7 @@ VteTerminalHyperlinkDecoration class >> initialize [
 	ST := Character escape asString, '\'
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 VteTerminalHyperlinkDecoration >> addOSCEscapeTo: aString [
 
 	^ String streamContents: [ :stream |
@@ -30,13 +32,13 @@ VteTerminalHyperlinkDecoration >> addOSCEscapeTo: aString [
 			<< ST ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminalHyperlinkDecoration >> configure: aWidget withinAdapter: anAdapter [
 
 	anAdapter setHyperlinksTo: aWidget
 ]
 
-{ #category : #decorating }
+{ #category : 'decorating' }
 VteTerminalHyperlinkDecoration >> decorate: aString [
 
 	^ aString 

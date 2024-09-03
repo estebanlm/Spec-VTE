@@ -1,28 +1,30 @@
 Class {
-	#name : #VteTextCopyHTMLCommand,
-	#superclass : #VteTextEditionCommand,
-	#category : #'Vte-Spec-Commands'
+	#name : 'VteTextCopyHTMLCommand',
+	#superclass : 'VteTextEditionCommand',
+	#category : 'Vte-Spec-Commands',
+	#package : 'Vte-Spec',
+	#tag : 'Commands'
 }
 
-{ #category : #defaults }
+{ #category : 'defaults' }
 VteTextCopyHTMLCommand class >> defaultIconName [
 	
 	^ nil
 ]
 
-{ #category : #default }
+{ #category : 'default' }
 VteTextCopyHTMLCommand class >> defaultName [
 
 	^ 'Copy HTML'
 ]
 
-{ #category : #default }
+{ #category : 'default' }
 VteTextCopyHTMLCommand class >> defaultShortcutKey [
 
 	^ nil
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 VteTextCopyHTMLCommand >> asSpecCommand [
 	| command |
 
@@ -34,19 +36,19 @@ VteTextCopyHTMLCommand >> asSpecCommand [
 	^ command
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 VteTextCopyHTMLCommand >> defaultIconName [
 
 	^ self class defaultIconName
 ]
 
-{ #category : #execution }
+{ #category : 'execution' }
 VteTextCopyHTMLCommand >> execute [
 
 	context copySelectionAsHTML
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 VteTextCopyHTMLCommand >> shortcutKey [
 
 	^ self class defaultShortcutKey

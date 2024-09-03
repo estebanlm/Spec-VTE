@@ -1,1 +1,1 @@
-Package { #name : #'Vte-Spec' }
+Package { #name : 'Vte-Spec' }

@@ -1,6 +1,6 @@
 Class {
-	#name : #VteTerminal,
-	#superclass : #GtkWidget,
+	#name : 'VteTerminal',
+	#superclass : 'GtkWidget',
 	#traits : 'GtkTScrollable',
 	#classTraits : 'GtkTScrollable classTrait',
 	#pools : [
@@ -8,42 +8,46 @@ Class {
 		'VteCursorShape',
 		'VtePtyFlags'
 	],
-	#category : #Vte
+	#category : 'Vte',
+	#package : 'Vte'
 }
 
-{ #category : #example }
+{ #category : 'example' }
 VteTerminal class >> example [ 
-	| vte scrollBar box |
+	| vte scrollbar box |
 
 	GtkEngine ensureRunning.
 
-	vte := self new
-		beCursorShapeIBeam;
-		allowHyperlink: true;
-		scrollOnOutput: true;
-		mouseAutohide: true;
-		yourself.
+	GRunLoop defer: [ 
+		vte := self new
+			beCursorShapeIBeam;
+			allowHyperlink: true;
+			scrollOnOutput: true;
+			mouseAutohide: true;
+			yourself.
 
-	scrollBar := GtkScrollBar newVerticalAdjustment: vte vAdjustment.
+		scrollbar := GtkScrollbar newVerticalAdjustment: vte vAdjustment.
+		scrollbar hExpand: false.
 
-	box := GtkBox newHorizontal
-		packStart: vte;
-		packStart: scrollBar expand: false;
-		yourself.
+		box := GtkBox newHorizontal
+			append: vte;
+			append: scrollbar;
+			yourself.
 
-	GtkWindow new 
-		title: 'Vte';
-		add: box;
-		showAll.
+		GtkWindow new 
+			title: 'Vte';
+			child: box;
+			present.
 
-	vte feed: ((String loremIpsum withNoLineLongerThan: 80) withLineEndings: String crlf)
+		vte feed: ((String loremIpsum withNoLineLongerThan: 80) withLineEndings: String crlf) 
+	]
 ]
 
-{ #category : #example }
+{ #category : 'example' }
 VteTerminal class >> example2 [
 	| vte scrollBar box |
 
-	GtkEngine ensureRunning.
+	GEngine ensureRunning.
 
 	vte := self new
 		beCursorShapeIBeam;
@@ -52,7 +56,7 @@ VteTerminal class >> example2 [
 		mouseAutohide: true;
 		yourself.
 
-	scrollBar := GtkScrollBar newVerticalAdjustment: vte vAdjustment.
+	scrollBar := GtkScrollbar newVerticalAdjustment: vte vAdjustment.
 
 	box := GtkBox newHorizontal
 		packStart: vte;
@@ -68,7 +72,7 @@ VteTerminal class >> example2 [
 		readStreamDo: [ :stream | stream contents  ]).
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal class >> features [
 
 	^ self 
@@ -76,25 +80,25 @@ VteTerminal class >> features [
 		module: VteLibrary
 ]
 
-{ #category : #'library path' }
+{ #category : 'library path' }
 VteTerminal class >> ffiLibraryName [
 
 	^ VteLibrary
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 VteTerminal class >> new [
 
 	^ self vteTerminalNew initialize
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 VteTerminal class >> vteTerminalNew [
 
 	^ self ffiCall: #(VteTerminal *vte_terminal_new()) module: VteLibrary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> allowBold: allow_bold [
 
 	self 
@@ -102,7 +106,7 @@ VteTerminal >> allowBold: allow_bold [
 		module: VteLibrary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> allowHyperlink: allow_hyperlink [
 
 	self 
@@ -110,25 +114,25 @@ VteTerminal >> allowHyperlink: allow_hyperlink [
 		module: VteLibrary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> beCursorShapeBlock [
 
 	self cursorShape: VTE_CURSOR_SHAPE_BLOCK
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> beCursorShapeIBeam [
 
 	self cursorShape: VTE_CURSOR_SHAPE_IBEAM
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> beCursorShapeUnderline [
 
 	self cursorShape: VTE_CURSOR_SHAPE_UNDERLINE
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> charHeight [
 
 	^ self 
@@ -136,7 +140,7 @@ VteTerminal >> charHeight [
 		module: VteLibrary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> charWidth [
 
 	^ self 
@@ -144,7 +148,7 @@ VteTerminal >> charWidth [
 		module: VteLibrary
 ]
 
-{ #category : #'accessing - colors' }
+{ #category : 'accessing - colors' }
 VteTerminal >> colorForeground: foreground [
 
 	^ self 
@@ -152,7 +156,7 @@ VteTerminal >> colorForeground: foreground [
 		module: VteLibrary
 ]
 
-{ #category : #'accessing - colors' }
+{ #category : 'accessing - colors' }
 VteTerminal >> colorForeground: foreground background: background palette: paletteArray [
 	"Taken from VteTerminal comment, see 
 		https://developer.gnome.org/vte/0.48/VteTerminal.html#vte-terminal-set-colors
@@ -186,7 +190,7 @@ VteTerminal >> colorForeground: foreground background: background palette: palet
 		paletteSize: paletteArray size
 ]
 
-{ #category : #'accessing - colors' }
+{ #category : 'accessing - colors' }
 VteTerminal >> colorHighlight: foreground [
 
 	^ self 
@@ -194,7 +198,7 @@ VteTerminal >> colorHighlight: foreground [
 		module: VteLibrary
 ]
 
-{ #category : #'accessing - colors' }
+{ #category : 'accessing - colors' }
 VteTerminal >> colorHighlightForeground: foreground [
 
 	^ self 
@@ -202,13 +206,13 @@ VteTerminal >> colorHighlightForeground: foreground [
 		module: VteLibrary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> columnCount [
 
 	^ self ffiCall: #(glong vte_terminal_get_column_count (self))
 ]
 
-{ #category : #'accessing - copy&paste' }
+{ #category : 'accessing - copy&paste' }
 VteTerminal >> copyClipboardHTML [
 
 	^ self 
@@ -216,7 +220,7 @@ VteTerminal >> copyClipboardHTML [
 		module: VteLibrary
 ]
 
-{ #category : #'accessing - copy&paste' }
+{ #category : 'accessing - copy&paste' }
 VteTerminal >> copyClipboardText [
 
 	^ self 
@@ -224,7 +228,7 @@ VteTerminal >> copyClipboardText [
 		module: VteLibrary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> cursorShape [
 
 	^ self 
@@ -232,7 +236,7 @@ VteTerminal >> cursorShape [
 		module: VteLibrary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> cursorShape: shape [
 
 	^ self 
@@ -240,13 +244,13 @@ VteTerminal >> cursorShape: shape [
 		module: VteLibrary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> feed: aString [
 	
 	self feed: aString length: -1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> feed: string length: length [
 
 	self 
@@ -254,13 +258,13 @@ VteTerminal >> feed: string length: length [
 		module: VteLibrary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> feedBytes: aByteArray [
 	
 	self feedBytes: aByteArray length: -1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> feedBytes: aByteArray length: length [
 
 	self 
@@ -268,13 +272,13 @@ VteTerminal >> feedBytes: aByteArray length: length [
 		module: VteLibrary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> feedChild: aString [
 
 	self feedChild: aString length: -1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> feedChild: text length: length [
 
 	self 
@@ -282,13 +286,13 @@ VteTerminal >> feedChild: text length: length [
 		module: VteLibrary
 ]
 
-{ #category : #'library path' }
+{ #category : 'library path' }
 VteTerminal >> ffiLibraryName [
 
 	^ VteLibrary
 ]
 
-{ #category : #'accessing - fonts' }
+{ #category : 'accessing - fonts' }
 VteTerminal >> font [
 
 	^ self 
@@ -296,7 +300,7 @@ VteTerminal >> font [
 		module: VteLibrary
 ]
 
-{ #category : #'accessing - fonts' }
+{ #category : 'accessing - fonts' }
 VteTerminal >> font: font_desc [
 
 	^ self 
@@ -304,13 +308,13 @@ VteTerminal >> font: font_desc [
 		module: VteLibrary
 ]
 
-{ #category : #'accessing - fonts' }
+{ #category : 'accessing - fonts' }
 VteTerminal >> fontNamed: aString [
 
 	self font: (PangoFontDescription newFromString: aString) autoRelease
 ]
 
-{ #category : #'accessing - fonts' }
+{ #category : 'accessing - fonts' }
 VteTerminal >> fontScale [
 
 	self 
@@ -318,7 +322,7 @@ VteTerminal >> fontScale [
 		module: VteLibrary
 ]
 
-{ #category : #'accessing - fonts' }
+{ #category : 'accessing - fonts' }
 VteTerminal >> fontScale: scale [
 
 	self 
@@ -326,7 +330,7 @@ VteTerminal >> fontScale: scale [
 		module: VteLibrary
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 VteTerminal >> getText [
 
 	^ self 
@@ -337,7 +341,7 @@ VteTerminal >> getText [
 		module: VteLibrary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> hyperlinkCheckEvent: event [ 
 	| checkEventHandle checkEventString |
 
@@ -350,7 +354,7 @@ VteTerminal >> hyperlinkCheckEvent: event [
 	^ checkEventString
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 VteTerminal >> isAllowBold [
 
 	self 
@@ -358,7 +362,7 @@ VteTerminal >> isAllowBold [
 		module: VteLibrary
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 VteTerminal >> isAllowHyperlink [
 
 	self 
@@ -366,7 +370,7 @@ VteTerminal >> isAllowHyperlink [
 		module: VteLibrary
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 VteTerminal >> isMouseAutohide [
 
 	self 
@@ -374,7 +378,7 @@ VteTerminal >> isMouseAutohide [
 		module: VteLibrary
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 VteTerminal >> isRewrapOnResize [
 
 	^ self 
@@ -382,7 +386,7 @@ VteTerminal >> isRewrapOnResize [
 		module: VteLibrary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> mouseAutohide: setting [
 
 	self 
@@ -390,7 +394,7 @@ VteTerminal >> mouseAutohide: setting [
 		module: VteLibrary
 ]
 
-{ #category : #'accessing - copy&paste' }
+{ #category : 'accessing - copy&paste' }
 VteTerminal >> pasteClipboard [
 
 	^ self 
@@ -398,13 +402,13 @@ VteTerminal >> pasteClipboard [
 		module: VteLibrary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> rowCount [
 
 	^ self ffiCall: #(glong vte_terminal_get_row_count (self))
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> scrollOnOutput: scroll [
 
 	self 
@@ -412,7 +416,7 @@ VteTerminal >> scrollOnOutput: scroll [
 		module: VteLibrary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> selectAll [
 
 	^ self 
@@ -420,7 +424,7 @@ VteTerminal >> selectAll [
 		module: VteLibrary
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 VteTerminal >> setColorsForeground: foreground background: background palette: palette paletteSize: palette_size [
 		
 	self 
@@ -433,7 +437,7 @@ VteTerminal >> setColorsForeground: foreground background: background palette: p
 		module: VteLibrary
 ]
 
-{ #category : #'accessing - colors' }
+{ #category : 'accessing - colors' }
 VteTerminal >> setDefaultColors [
 
 	self 
@@ -441,7 +445,7 @@ VteTerminal >> setDefaultColors [
 		module: VteLibrary
 ]
 
-{ #category : #'accessing - colors' }
+{ #category : 'accessing - colors' }
 VteTerminal >> setOther [
 	| palette |
 
@@ -475,7 +479,7 @@ VteTerminal >> setOther [
 	
 ]
 
-{ #category : #'accessing - colors' }
+{ #category : 'accessing - colors' }
 VteTerminal >> setSolarized [
 	| palette |
 
@@ -509,13 +513,13 @@ VteTerminal >> setSolarized [
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> size: aPoint [
 
 	self sizeColumns: aPoint x rows: aPoint y
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> sizeColumns: columns rows: rows [
 
 	self 
@@ -523,7 +527,7 @@ VteTerminal >> sizeColumns: columns rows: rows [
 		module: VteLibrary
 ]
 
-{ #category : #'accessing - spawn' }
+{ #category : 'accessing - spawn' }
 VteTerminal >> spawnAsync: pty_flags workingDirectory: working_directory argv: argv envv: envv spawnFlags: spawn_flags childSetup: child_setup childSetupData:  child_setup_data childDestroyNotify: child_setup_data_destroy timeout: timeout cancellable: cancellable callback: callback data: user_data [
 	"
 	GSpawnChildSetupFunc: void (*GSpawnChildSetupFunc) (gpointer user_data)
@@ -550,7 +554,7 @@ VteTerminal >> spawnAsync: pty_flags workingDirectory: working_directory argv: a
 		gpointer user_data))
 ]
 
-{ #category : #'accessing - spawn' }
+{ #category : 'accessing - spawn' }
 VteTerminal >> spawnAsyncDefaultWorkingDirectory: working_directory argv: argv envv: envv spawnFlags: spaen_flags childSetup: child_setup childSetupData:  child_setup_data childDestroyNotify: child_setup_data_destroy timeout: timeout cancellable: cancellable callback: callback data: user_data [
 
 	self 
@@ -568,7 +572,7 @@ VteTerminal >> spawnAsyncDefaultWorkingDirectory: working_directory argv: argv e
 		data: user_data
 ]
 
-{ #category : #'accessing - spawn' }
+{ #category : 'accessing - spawn' }
 VteTerminal >> spawnAsyncDefaultWorkingDirectory: working_directory command: command spawnFlags: spaen_flags childSetup: child_setup childSetupData:  child_setup_data childDestroyNotify: child_setup_data_destroy timeout: timeout cancellable: cancellable callback: callback data: user_data [
 	| argv commandArg |
 	
@@ -596,13 +600,13 @@ VteTerminal >> spawnAsyncDefaultWorkingDirectory: working_directory command: com
 		commandArg free ].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> text [
 
 	^ self getText
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 VteTerminal >> unselectAll [
 
 	^ self 
@@ -610,7 +614,7 @@ VteTerminal >> unselectAll [
 		module: VteLibrary
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 VteTerminal >> vteHyperlinkCheckEvent: event [ 
 
 	^ self 

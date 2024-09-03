@@ -1,13 +1,12 @@
 Class {
-	#name : #VteLibrary,
-	#superclass : #FFILibrary,
-	#category : #Vte
+	#name : 'VteLibrary',
+	#superclass : 'FFILibrary',
+	#category : 'Vte',
+	#package : 'Vte'
 }
 
-{ #category : #'accessing platform' }
+{ #category : 'accessing platform' }
 VteLibrary >> unix64LibraryName [
 
-	^ FFIUnix64LibraryFinder findAnyLibrary: #(
-		'libvte-2.91.so' 
-		'libvte-2.91.so.0')
+	^ FFIUnix64LibraryFinder findLibrary: 'libvte-2.91-gtk4.so'
 ]
