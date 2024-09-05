@@ -345,8 +345,14 @@ VteTerminal >> getText [
 
 { #category : 'accessing' }
 VteTerminal >> hyperlinkCheckAt: aPoint [ 
+	| result |
+	
+	result := self vteHyperlinkCheckAtX: aPoint x y: aPoint y.
+	result isNull ifTrue: [ ^ nil ].
 
-	^ self vteHyperlinkCheckAtX: aPoint x y: aPoint y
+	^ [ result utf8StringFromCString ]
+	ensure: [ result free ]	
+
 ]
 
 { #category : 'testing' }
@@ -612,5 +618,5 @@ VteTerminal >> unselectAll [
 { #category : 'private' }
 VteTerminal >> vteHyperlinkCheckAtX: x y: y [
 
-	^ self ffiCall: #(char* vte_terminal_check_hyperlink_at (self, double x, double y))
+	^ self ffiCall: #(void* vte_terminal_check_hyperlink_at (self, double x, double y))
 ]
