@@ -307,8 +307,9 @@ GtkTerminalAdapter >> saveCursor [
 GtkTerminalAdapter >> setHyperlinksTo: aWidget [
 
 	aWidget allowHyperlink: true.
-	aWidget connectButtonPressEvent: [ :event |
-		self checkForHyperlink: event ].
+	aWidget addPrimaryButtonPressEvent: [ :event | 
+		self checkForHyperlink: event ]
+	
 ]
 
 { #category : 'api-ansi' }
@@ -341,12 +342,13 @@ GtkTerminalAdapter >> wrapWidget: gtkWidget [
 	| scrollbar |
 
 	innerWidget := gtkWidget.
+	innerWidget hExpand: true.
 	scrollbar := GtkScrollbar newVerticalAdjustment: innerWidget vAdjustment.
 	scrollbar hExpand: false.
 	^ GtkBox newHorizontal
 		append: innerWidget;
 		append: scrollbar;
-		showAll
+		yourself
 ]
 
 { #category : 'private' }

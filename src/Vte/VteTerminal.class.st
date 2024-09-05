@@ -45,31 +45,33 @@ VteTerminal class >> example [
 
 { #category : 'example' }
 VteTerminal class >> example2 [
-	| vte scrollBar box |
+	| vte scrollbar box |
 
 	GEngine ensureRunning.
 
-	vte := self new
-		beCursorShapeIBeam;
-		allowHyperlink: true;
-		scrollOnOutput: true;
-		mouseAutohide: true;
-		yourself.
+	GRunLoop defer: [ 
+		vte := self new
+			beCursorShapeIBeam;
+			allowHyperlink: true;
+			scrollOnOutput: true;
+			mouseAutohide: true;
+			yourself.
 
-	scrollBar := GtkScrollbar newVerticalAdjustment: vte vAdjustment.
+		scrollbar := GtkScrollbar newVerticalAdjustment: vte vAdjustment.
+		scrollbar hExpand: false.
 
-	box := GtkBox newHorizontal
-		packStart: vte;
-		packStart: scrollBar expand: false;
-		yourself.
+		box := GtkBox newHorizontal
+			append: vte;
+			append: scrollbar;
+			yourself.
 
-	GtkWindow new 
-		title: 'Vte';
-		add: box;
-		showAll.
+		GtkWindow new 
+			title: 'Vte';
+			child: box;
+			present.
 
-	vte feed: ((FileLocator imageDirectory / 'log' / 'LOTJ' / 'log-2021-9-6.txt') 
-		readStreamDo: [ :stream | stream contents  ]).
+		vte feed: ((FileLocator imageDirectory / 'log' / 'LOTJ' / 'log-2021-9-6.txt') 
+			readStreamDo: [ :stream | stream contents  ]) ]
 ]
 
 { #category : 'accessing' }
