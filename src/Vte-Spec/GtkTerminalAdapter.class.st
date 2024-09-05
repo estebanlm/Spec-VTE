@@ -103,7 +103,7 @@ GtkTerminalAdapter >> checkForHyperlink: event [
 	event isPrimaryButton ifFalse: [ ^ false ].
 
 	^ self innerWidgetDo: [ :w |
-		(w hyperlinkCheckEvent: event)
+		(w hyperlinkCheckAt: event position)
 			ifNotNil: [ :aString |
 				self triggerHyperlinkPressed: aString.
 				true ]

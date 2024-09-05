@@ -344,16 +344,9 @@ VteTerminal >> getText [
 ]
 
 { #category : 'accessing' }
-VteTerminal >> hyperlinkCheckEvent: event [ 
-	| checkEventHandle checkEventString |
+VteTerminal >> hyperlinkCheckAt: aPoint [ 
 
-	checkEventHandle := self vteHyperlinkCheckEvent: event.
-	checkEventHandle isNull ifTrue: [ ^ nil ].
-	
-	checkEventString := checkEventHandle readStringUTF8.
-	checkEventHandle free.
-	
-	^ checkEventString
+	^ self vteHyperlinkCheckAtX: aPoint x y: aPoint y
 ]
 
 { #category : 'testing' }
@@ -617,9 +610,7 @@ VteTerminal >> unselectAll [
 ]
 
 { #category : 'private' }
-VteTerminal >> vteHyperlinkCheckEvent: event [ 
+VteTerminal >> vteHyperlinkCheckAtX: x y: y [
 
-	^ self 
-		ffiCall: #(void *vte_terminal_hyperlink_check_event (self, GdkEvent *event))
-		module: VteLibrary
+	^ self ffiCall: #(char* vte_terminal_check_hyperlink_at (self, double x, double y))
 ]
