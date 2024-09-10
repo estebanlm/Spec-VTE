@@ -20,14 +20,6 @@ GtkTerminalAdapter >> addDecoration: aDecoration [
 ]
 
 { #category : 'building' }
-GtkTerminalAdapter >> addKeyBindingsTo: vteTerminal [
-
-	super addKeyBindingsTo: vteTerminal.
-	self hasContextMenu ifTrue: [
-		self addContextMenuKeyBindings: vteTerminal ]
-]
-
-{ #category : 'building' }
 GtkTerminalAdapter >> addMenuTo: vteTerminal [
 	
 	self hasContextMenu ifFalse: [ ^ self ].

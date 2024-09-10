@@ -254,7 +254,8 @@ VteTerminalPresenter >> initialize [
 
 	super initialize.
 	editable := true.
-	self withEditionContextMenu
+	self withEditionContextMenu.
+	self registerActions
 ]
 
 { #category : 'testing' }
@@ -267,6 +268,14 @@ VteTerminalPresenter >> isEditable [
 VteTerminalPresenter >> newContextMenuKeyBindings [
 	
 	^ self editionCommandsGroup asKMCategory
+]
+
+{ #category : 'initialization' }
+VteTerminalPresenter >> registerActions [
+
+	self addShortcutWith: [ :action | action 
+		shortcutKey: $t actionModifier;
+		action: [ self showContextMenu ] ]
 ]
 
 { #category : 'api - ansi' }
