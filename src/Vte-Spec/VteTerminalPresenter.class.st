@@ -1,13 +1,11 @@
 Class {
 	#name : 'VteTerminalPresenter',
 	#superclass : 'SpAbstractWidgetPresenter',
-	#traits : 'SpTContextMenu',
-	#classTraits : 'SpTContextMenu classTrait',
 	#instVars : [
-		'#commandHandlers',
-		'#editionContextMenu',
-		'#editable',
-		'#decorations'
+		'commandHandlers',
+		'editable',
+		'decorations',
+		'editionContextMenu'
 	],
 	#category : 'Vte-Spec-Widgets',
 	#package : 'Vte-Spec',
@@ -85,18 +83,6 @@ VteTerminalPresenter >> beNotEditable [
 	self editable: false
 ]
 
-{ #category : 'private' }
-VteTerminalPresenter >> buildContextKeyBindingsWith: aCategory [
-	| category |
-	
-	category := self newContextMenuKeyBindings.
-	aCategory ifNotNil: [ 
-		aCategory allEntries keymaps do: [ :each |
-			category addKeymapEntry: each ] ].
-	
-	^ category
-]
-
 { #category : 'api' }
 VteTerminalPresenter >> charSize [
 	"The size of a character in the terminal (useful to conversions)"
@@ -128,34 +114,6 @@ VteTerminalPresenter >> columnCount [
 	self withAdapterDo: [ :anAdapter | ^ anAdapter columnCount ].
 	^ 0
 
-]
-
-{ #category : 'api - shortcuts' }
-VteTerminalPresenter >> contextKeyBindings [
-
-	^ self buildContextKeyBindingsWith: super contextKeyBindings
-]
-
-{ #category : 'api' }
-VteTerminalPresenter >> contextMenu [
-	"Answer context menu or nil if there is none defined.
-	 Context menu can be an instace of `SpMenuPresenter` or a block (that will answer eventually an 
-	 instance of `SpMenuPresenter` aswell. 
-	 If your context menu is defined through a block it means is dynamic, and it will be evaluated 
-	 each time the context menu is invoked."
-
-	^ contextMenu
-]
-
-{ #category : 'api' }
-VteTerminalPresenter >> contextMenu: aValuableOrMenuPresenter [
-	"Set the context menu.
-	 Context menu can be an instace of `SpMenuPresenter` or a block (that will answer eventually an 
-	 instance of `SpMenuPresenter` aswell. 
-	 If your context menu is defined through a block it means is dynamic, and it will be evaluated 
-	 each time the context menu is invoked."
-
-	contextMenu := aValuableOrMenuPresenter
 ]
 
 { #category : 'command support' }
@@ -196,18 +154,6 @@ VteTerminalPresenter >> editionCommandsGroup [
 	^ SpRecursiveContextSetter
 		visit: (self class buildEditionCommandsGroupFor: self defaultCommandsContext) 
 		toSetContext: self defaultCommandsContext
-]
-
-{ #category : 'private' }
-VteTerminalPresenter >> editionContextKeyBindings [
-
-	^ self editionCommandsGroup asKMCategory
-]
-
-{ #category : 'private' }
-VteTerminalPresenter >> editionContextMenu [
-
-	^ self editionCommandsGroup asMenuPresenter
 ]
 
 { #category : 'command support' }
@@ -262,12 +208,6 @@ VteTerminalPresenter >> initialize [
 VteTerminalPresenter >> isEditable [
 
 	^ editable
-]
-
-{ #category : 'private' }
-VteTerminalPresenter >> newContextMenuKeyBindings [
-	
-	^ self editionCommandsGroup asKMCategory
 ]
 
 { #category : 'initialization' }

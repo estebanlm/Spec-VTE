@@ -21,9 +21,7 @@ VteTextCopyCommand class >> defaultName [
 { #category : 'default' }
 VteTextCopyCommand class >> defaultShortcutKey [
 
-	^ $c command mac 
-		| $c control win 
-		| $c control unix
+	^ $c actionModifier
 ]
 
 { #category : 'converting' }

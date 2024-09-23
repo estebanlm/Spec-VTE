@@ -170,6 +170,7 @@ VteTerminal >> colorForeground: foreground background: background palette: palet
 	If foreground is NULL and palette size is greater than 0, the new foreground color 
 	is taken from palette [7]. If background is NULL and palette_size is greater 
 	than 0, the new background color is taken from palette [0]."
+
 	| gtkPalette |
 
 	gtkPalette := paletteArray
@@ -182,12 +183,8 @@ VteTerminal >> colorForeground: foreground background: background palette: palet
 			ExternalAddress null ].
 
 	self 
-		setColorsForeground: (foreground 
-			ifNotNil: [ :c | c asGdkRGBA getHandle ] 
-			ifNil: [ ExternalAddress null ])
-		background: (background 
-			ifNotNil: [ :c | c asGdkRGBA getHandle ] 
-			ifNil: [ ExternalAddress null ])
+		setColorsForeground: (foreground ifNotNil: [ :c | c asGdkRGBA ])
+		background: (background ifNotNil: [ :c | c asGdkRGBA ])
 		palette: gtkPalette
 		paletteSize: paletteArray size
 ]
@@ -431,8 +428,8 @@ VteTerminal >> setColorsForeground: foreground background: background palette: p
 	self 
 		ffiCall: #(void vte_terminal_set_colors (
 			self,
-			"const GdkRGBA *"void *foreground,
-			"const GdkRGBA *"void *background,
+			const GdkRGBA *foreground,
+			const GdkRGBA *background,
 			"const GdkRGBA *"void *palette,
 			gsize palette_size))
 		module: VteLibrary
