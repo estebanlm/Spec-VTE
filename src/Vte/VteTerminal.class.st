@@ -253,7 +253,7 @@ VteTerminal >> feed: aString [
 VteTerminal >> feed: string length: length [
 
 	self 
-		ffiCall: #(void vte_terminal_feed (self, const char *string, gssize length))
+		ffiCall: #(void vte_terminal_feed (self, const char *string, long length))
 		module: VteLibrary
 ]
 
