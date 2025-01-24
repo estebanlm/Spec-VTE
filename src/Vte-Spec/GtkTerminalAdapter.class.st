@@ -119,11 +119,11 @@ GtkTerminalAdapter >> cursorPosition: aPoint [
 
 { #category : 'api' }
 GtkTerminalAdapter >> feed: aString [
+	| feedString |
 
+	feedString := (self processDecorations: aString) withLineEndingTerminal.
 	self innerWidgetDo: [ :w |  
-		| decoratedString |
-		decoratedString := self processDecorations: aString.
-		w feed: decoratedString withLineEndingTerminal ]
+		w feed: feedString ]
 ]
 
 { #category : 'api' }
