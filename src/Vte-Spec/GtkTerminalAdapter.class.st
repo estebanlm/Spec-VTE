@@ -185,7 +185,6 @@ GtkTerminalAdapter >> handleKeyEvent: event [
 GtkTerminalAdapter >> hasContextMenu [
 	
 	^ self presenter hasEditionContextMenu
-		or: [ self presenter contextMenu notNil ]
 ]
 
 { #category : 'api - ansi' }
