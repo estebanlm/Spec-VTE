@@ -10,7 +10,10 @@ Class {
 GtkAdapterActionTerminalManager >> actionGroups [
 	| groups |
 
-	groups := { self presenter actions beRoot beDisplayedAsGroup }.
+	groups := self presenter actions 
+		ifNotNil: [ :anActionGroup | { anActionGroup beRoot beDisplayedAsGroup } ]
+		ifNil: [ #() ].
+		
 	^ self presenter hasEditionContextMenu 
 		ifTrue: [ groups copyWithFirst: self presenter editionCommandsGroup beRoot beDisplayedAsGroup ]
 		ifFalse: [ groups ]
@@ -18,6 +21,7 @@ GtkAdapterActionTerminalManager >> actionGroups [
 
 { #category : 'actions' }
 GtkAdapterActionTerminalManager >> installGroupsOn: gtkWidget [
+	logger trace.
 
 	super installGroupsOn: gtkWidget.	
 	self presenter hasEditionContextMenu ifTrue: [  

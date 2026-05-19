@@ -7,6 +7,9 @@ Class {
 		'inputStream',
 		'cursorHidden'
 	],
+	#pools : [
+		'GSpawnFlags'
+	],
 	#category : 'Vte-Spec-Adapter',
 	#package : 'Vte-Spec',
 	#tag : 'Adapter'
@@ -23,11 +26,20 @@ GtkTerminalAdapter >> addDecoration: aDecoration [
 GtkTerminalAdapter >> addModelTo: vteTerminal [
 
 	super addModelTo: vteTerminal.
+	
+	vteTerminal connectChildExited: [ :status | self announceChildExited: status ].
+	
 	self presenter decorations do: [ :each | 
 		each configure: vteTerminal withinAdapter: self ].
 	"self addMenuTo: vteTerminal."
 	"vteTerminal connectKeyPressEvent: [ :event | 
 		self handleKeyEvent: event ]"
+]
+
+{ #category : 'private' }
+GtkTerminalAdapter >> announceChildExited: status [
+
+	self presenter announce: (VteChildExited newStatus: status)
 ]
 
 { #category : 'api - ansi' }
@@ -181,6 +193,12 @@ GtkTerminalAdapter >> handleKeyEvent: event [
 	^ false
 ]
 
+{ #category : 'testing' }
+GtkTerminalAdapter >> hasActions [
+
+	^ true
+]
+
 { #category : 'private' }
 GtkTerminalAdapter >> hasContextMenu [
 	
@@ -283,6 +301,23 @@ GtkTerminalAdapter >> showCursor [
 GtkTerminalAdapter >> size: aPoint [
 
 	self innerWidgetDo: [ :w | w size: aPoint ]
+]
+
+{ #category : 'api' }
+GtkTerminalAdapter >> spawnAsync: aCommand workingDirectory: workingDirectory arguments: aCollection [
+
+	self innerWidgetDo: [ :w | 
+		w 
+			spawnAsyncDefaultWorkingDirectory: workingDirectory 
+			command: aCommand
+			spawnFlags: G_SPAWN_DEFAULT
+			childSetup: ExternalAddress null 
+			childSetupData:  ExternalAddress null  
+			childDestroyNotify: ExternalAddress null
+			timeout: -1 
+			cancellable: ExternalAddress null
+			callback: ExternalAddress null
+			data: ExternalAddress null ]
 ]
 
 { #category : 'configuring' }

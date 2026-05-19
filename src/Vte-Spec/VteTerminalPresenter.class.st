@@ -142,6 +142,16 @@ VteTerminalPresenter >> decorations [
 	^ decorations ifNil: [ #() ]
 ]
 
+{ #category : 'initialization' }
+VteTerminalPresenter >> defaultActions [
+
+	^ SpActionGroup new 
+		addActionWith: [ :action | action
+			];
+		addActionWith: [ :action | action ];
+		yourself
+]
+
 { #category : 'private' }
 VteTerminalPresenter >> editable: aBoolean [
 
@@ -156,21 +166,21 @@ VteTerminalPresenter >> editionCommandsGroup [
 		toSetContext: self defaultCommandsContext
 ]
 
-{ #category : 'command support' }
+{ #category : 'api' }
 VteTerminalPresenter >> feed: aString [
 
 	self withAdapterPerformOrDefer: [ :anAdapter |
 		anAdapter feed: aString ]
 ]
 
-{ #category : 'command support' }
+{ #category : 'api' }
 VteTerminalPresenter >> feedBytes: aByteArray [
 
 	self withAdapterPerformOrDefer: [ :anAdapter |
 		anAdapter feedBytes: aByteArray ]
 ]
 
-{ #category : 'command support' }
+{ #category : 'api' }
 VteTerminalPresenter >> feedLine: aString [
 
 	^ self feed: aString, String cr
@@ -213,9 +223,11 @@ VteTerminalPresenter >> isEditable [
 { #category : 'initialization' }
 VteTerminalPresenter >> registerActions [
 
-	self addShortcutWith: [ :action | action 
-		shortcutKey: $t actionModifier;
-		action: [ self showContextMenu ] ]
+	self ensureInternalActions 
+		addShortcutWith: [ :action | action
+			name: 'show-context-menu';
+			shortcutKey: $t actionModifier;
+			action: [ self showContextMenu ] ]
 ]
 
 { #category : 'api - ansi' }
@@ -254,6 +266,26 @@ VteTerminalPresenter >> showCursor [
 VteTerminalPresenter >> size: aPoint [
 
 	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter size: aPoint ]
+]
+
+{ #category : 'api' }
+VteTerminalPresenter >> spawnAsync: programName workingDirectory: workingDirectory arguments: aCollection [
+	
+	self withAdapterPerformOrDefer: [ :anAdapter |
+		anAdapter 
+			spawnAsync: programName 
+			workingDirectory: workingDirectory 
+			arguments: aCollection ]
+]
+
+{ #category : 'api - events' }
+VteTerminalPresenter >> whenChildExitedDo: aBlock [
+
+	self announcer 
+		when: VteChildExited 
+		do: aBlock 
+		for: aBlock receiver
+
 ]
 
 { #category : 'command support' }

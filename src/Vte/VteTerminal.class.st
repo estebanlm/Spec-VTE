@@ -211,6 +211,15 @@ VteTerminal >> columnCount [
 	^ self ffiCall: #(glong vte_terminal_get_column_count (self))
 ]
 
+{ #category : 'signaling' }
+VteTerminal >> connectChildExited: aBlock [
+
+	self 
+		connect: 'child-exited' 
+		signature: #(void (void *selfHandle, int status, gpointer user_data)) 
+		do: [ :selfHandle :status :user_data | aBlock value: status ]
+]
+
 { #category : 'accessing - copy&paste' }
 VteTerminal >> copyClipboardHTML [
 
