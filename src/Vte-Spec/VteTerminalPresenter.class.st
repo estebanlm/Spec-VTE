@@ -285,7 +285,6 @@ VteTerminalPresenter >> whenChildExitedDo: aBlock [
 		when: VteChildExited 
 		do: aBlock 
 		for: aBlock receiver
-
 ]
 
 { #category : 'command support' }
