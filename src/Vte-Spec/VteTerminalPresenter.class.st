@@ -278,6 +278,13 @@ VteTerminalPresenter >> spawnAsync: programName workingDirectory: workingDirecto
 			arguments: aCollection ]
 ]
 
+{ #category : 'api' }
+VteTerminalPresenter >> terminateAllSpawns [
+	
+	self withAdapterDo: [ :anAdapter |
+		anAdapter terminateAllSpawns ]
+]
+
 { #category : 'api - events' }
 VteTerminalPresenter >> whenChildExitedDo: aBlock [
 

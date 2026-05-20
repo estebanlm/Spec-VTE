@@ -5,7 +5,8 @@ Class {
 		'innerWidget',
 		'lastMenuShown',
 		'inputStream',
-		'cursorHidden'
+		'cursorHidden',
+		'programs'
 	],
 	#pools : [
 		'GSpawnFlags'
@@ -297,6 +298,15 @@ GtkTerminalAdapter >> showCursor [
 	self feedEscape: '[?25h'
 ]
 
+{ #category : 'private' }
+GtkTerminalAdapter >> sigterm: pid [
+	"#define SIGTERM 15"
+
+	^ self 
+		ffiCall: #(int kill(int pid, int 15)) 
+		module: LibC
+]
+
 { #category : 'api' }
 GtkTerminalAdapter >> size: aPoint [
 
@@ -305,6 +315,15 @@ GtkTerminalAdapter >> size: aPoint [
 
 { #category : 'api' }
 GtkTerminalAdapter >> spawnAsync: aCommand workingDirectory: workingDirectory arguments: aCollection [
+	| readyCallback |
+
+	programs ifNil: [ programs := OrderedCollection new ].
+	readyCallback := GCallback 
+		signature: #(void (void *selfHandle, int pid, void *error, gpointer user_data)) 
+		block: [ :selfHandle :pid :error :user_data | 
+			error isNull ifFalse: [ 
+				self error: ('Spawn failed: {1}' format: { (GError fromHandle: error) messageString }) ].
+			programs add: { aCommand. pid } ]. 
 
 	self innerWidgetDo: [ :w | 
 		w 
@@ -313,11 +332,21 @@ GtkTerminalAdapter >> spawnAsync: aCommand workingDirectory: workingDirectory ar
 			spawnFlags: G_SPAWN_DEFAULT
 			childSetup: ExternalAddress null 
 			childSetupData:  ExternalAddress null  
-			childDestroyNotify: ExternalAddress null
+			childDestroyNotify: GCallback null
 			timeout: -1 
 			cancellable: ExternalAddress null
-			callback: ExternalAddress null
+			callback: readyCallback
 			data: ExternalAddress null ]
+]
+
+{ #category : 'api' }
+GtkTerminalAdapter >> terminateAllSpawns [
+
+	programs ifNil: [ ^ self ].
+	
+	programs do: [ :eachTuple |
+		logger debug: 'Terminating: ',  eachTuple first.
+		self sigterm: eachTuple second ]
 ]
 
 { #category : 'configuring' }

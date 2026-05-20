@@ -552,12 +552,12 @@ VteTerminal >> spawnAsync: pty_flags workingDirectory: working_directory argv: a
 		"char **"void *argv,
 		"char **"void *envv,
 		GSpawnFlags spawn_flags,
-		"GSpawnChildSetupFunc"void *child_setup,
+		"GSpawnChildSetupFunc"GCallback child_setup,
 		gpointer child_setup_data,
 		"GDestroyNotify"void *child_setup_data_destroy,
 		int timeout,
 		"GCancellable *"GObject *cancellable,
-		"VteTerminalSpawnAsyncCallback"void *callback,
+		"VteTerminalSpawnAsyncCallback"GCallback callback,
 		gpointer user_data))
 ]
 
