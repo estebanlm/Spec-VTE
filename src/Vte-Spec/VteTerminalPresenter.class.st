@@ -4,8 +4,7 @@ Class {
 	#instVars : [
 		'commandHandlers',
 		'editable',
-		'decorations',
-		'editionContextMenu'
+		'decorations'
 	],
 	#category : 'Vte-Spec-Widgets',
 	#package : 'Vte-Spec',
@@ -16,40 +15,6 @@ Class {
 VteTerminalPresenter class >> adapterName [
 
 	^ #TerminalAdapter
-]
-
-{ #category : 'commands' }
-VteTerminalPresenter class >> buildEditionCommandsGroupFor: presenterInstance [
-	| rootCommandGroup |
-
-	rootCommandGroup := CmCommandGroup forSpec beRoot.
-	self 
-		buildEditionCommandsGroupWith: presenterInstance 
-		forRoot: rootCommandGroup.
-	
-	^ rootCommandGroup
-]
-
-{ #category : 'commands' }
-VteTerminalPresenter class >> buildEditionCommandsGroupWith: presenter forRoot: aCmCommandsGroup [
-
-	aCmCommandsGroup beDisplayedAsGroup.
-	aCmCommandsGroup register: (self textEditionCommandsGroupWith: presenter)
-]
-
-{ #category : 'commands' }
-VteTerminalPresenter class >> textEditionCommandsGroupWith: aPresenter [
-	| group |
-
-	group := (CmCommandGroup named: 'Selection edition commands') asSpecGroup.
-	group
-		description: 'Edit code selection.';
-		beDisplayedAsGroup.
-	
-	VteTextEditionCommand allSubclassesDo: [ :commandClass | 
-		group register: (commandClass forSpecContext: aPresenter) ].
-	
-	^ group
 ]
 
 { #category : 'api' }
@@ -147,8 +112,19 @@ VteTerminalPresenter >> defaultActions [
 
 	^ SpActionGroup new 
 		addActionWith: [ :action | action
-			];
-		addActionWith: [ :action | action ];
+			name: 'Copy';
+			description: 'Copy current selection';
+			shortcutKey: $c shift actionModifier;
+			action: [ self copySelection ] ];
+		addActionWith: [ :action | action
+			name: 'Copy as HTML';
+			description: 'Copy current selection as HTML text';
+			action: [ self copySelectionAsHTML ] ];
+		addActionWith: [ :action | action 
+			name: 'Paste';
+			description: 'Paste current clipboard context';
+			shortcutKey: $p shift actionModifier;
+			action: [ self paste ] ];
 		yourself
 ]
 
@@ -156,14 +132,6 @@ VteTerminalPresenter >> defaultActions [
 VteTerminalPresenter >> editable: aBoolean [
 
 	editable := aBoolean
-]
-
-{ #category : 'private' }
-VteTerminalPresenter >> editionCommandsGroup [
-
-	^ SpRecursiveContextSetter
-		visit: (self class buildEditionCommandsGroupFor: self defaultCommandsContext) 
-		toSetContext: self defaultCommandsContext
 ]
 
 { #category : 'api' }
@@ -193,12 +161,6 @@ VteTerminalPresenter >> foregroundColor: aColor [
 	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter foregroundColor: aColor ]
 ]
 
-{ #category : 'testing' }
-VteTerminalPresenter >> hasEditionContextMenu [
-
-	^ editionContextMenu
-]
-
 { #category : 'api - ansi' }
 VteTerminalPresenter >> hideCursor [
 	
@@ -210,7 +172,6 @@ VteTerminalPresenter >> initialize [
 
 	super initialize.
 	editable := true.
-	self withEditionContextMenu.
 	self registerActions
 ]
 
@@ -220,6 +181,13 @@ VteTerminalPresenter >> isEditable [
 	^ editable
 ]
 
+{ #category : 'command support' }
+VteTerminalPresenter >> paste [
+	
+	self withAdapterDo: [ :anAdapter | 
+		anAdapter paste ]
+]
+
 { #category : 'initialization' }
 VteTerminalPresenter >> registerActions [
 
@@ -227,7 +195,9 @@ VteTerminalPresenter >> registerActions [
 		addShortcutWith: [ :action | action
 			name: 'show-context-menu';
 			shortcutKey: $t actionModifier;
-			action: [ self showContextMenu ] ]
+			action: [ self showContextMenu ] ].
+			
+	self actions: self defaultActions
 ]
 
 { #category : 'api - ansi' }
@@ -294,26 +264,8 @@ VteTerminalPresenter >> whenChildExitedDo: aBlock [
 		for: aBlock receiver
 ]
 
-{ #category : 'command support' }
-VteTerminalPresenter >> withEditionContextMenu [
-	"Enables edition context menu. When this option is selected, right-clicking in the text area 
-	 will show a standard edition menu (copy, cut, copy&paste). 
-	 Adding your own context menu (See `SpAbstractTextPresenter>>#contextMenu:`) will make both 
-	 menus (edition and your own) to be combined into one single context menu."
-
-	editionContextMenu := true
-]
-
 { #category : 'api' }
 VteTerminalPresenter >> withHyperlinks [
 
 	self addDecoration: VteTerminalHyperlinkDecoration new
-]
-
-{ #category : 'command support' }
-VteTerminalPresenter >> withoutEditionContextMenu [
-	"Disable default edition context menu. 
-	 See also `SpTextPresenter>>#withEditionContextMenu`."
-
-	editionContextMenu := false
 ]

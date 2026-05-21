@@ -194,18 +194,6 @@ GtkTerminalAdapter >> handleKeyEvent: event [
 	^ false
 ]
 
-{ #category : 'testing' }
-GtkTerminalAdapter >> hasActions [
-
-	^ true
-]
-
-{ #category : 'private' }
-GtkTerminalAdapter >> hasContextMenu [
-	
-	^ self presenter hasEditionContextMenu
-]
-
 { #category : 'api - ansi' }
 GtkTerminalAdapter >> hideCursor [
 
@@ -232,10 +220,10 @@ GtkTerminalAdapter >> isWrapWord [
 	^ false
 ]
 
-{ #category : 'private - actions' }
-GtkTerminalAdapter >> newActionManager [
+{ #category : 'api' }
+GtkTerminalAdapter >> paste [
 
-	^ GtkAdapterActionTerminalManager on: self
+	self innerWidgetDo: [ :w | w pasteClipboard ]
 ]
 
 { #category : 'private' }
