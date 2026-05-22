@@ -40,7 +40,8 @@ GtkTerminalAdapter >> addModelTo: vteTerminal [
 { #category : 'private' }
 GtkTerminalAdapter >> announceChildExited: status [
 
-	self presenter announce: (VteChildExited newStatus: status)
+	self runInSystem: [
+		self presenter announce: (VteChildExited newStatus: status) ]
 ]
 
 { #category : 'api - ansi' }
