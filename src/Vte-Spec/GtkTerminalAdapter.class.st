@@ -53,6 +53,42 @@ GtkTerminalAdapter >> backgroundColor: aColor [
 		(aColor blue * 255) asInteger })
 ]
 
+{ #category : 'theme' }
+GtkTerminalAdapter >> beDarkTheme [
+	| palette |
+	
+	palette := #( 
+		"0: Black" "1: Red" "2: Green" "3: Yellow" "4: Blue" "5: Magenta" "6: Cyan" "7: White" "8: Bright Black" 
+		'2E3436' 'CC0000' '4E9A06' 'C4A000' '3465A4' '75507B' '06989A' 'D3D7CF' 
+		"9: Bright Red" "10: Bright Green" "11: Bright Yellow" "12: Bright Blue" "13: Bright Magenta" "14: Bright Cyan" "15: Bright White"
+		'555753' 'EF2929' '8AE234' 'FCE94F' '729FCF' 'AD7FA8' '34E2E2' 'EEEEEC' ) 
+		collect: [ :each | GdkRGBA fromHexString: each ]. 
+		
+
+	self innerWidgetDo: [ :w | 
+		w 
+			colorForeground: nil 
+			background: Color black 
+			palette: palette ]
+]
+
+{ #category : 'theme' }
+GtkTerminalAdapter >> beLightTheme [
+	| palette |
+	
+	palette := #( 
+		"0: Bright White (light background)" "1: Red" "2: Green" "3: Yellow" "4: Blue" "5: Magenta" "6: Cyan" "7: Black (dark foreground)" "8: Bright Black" 
+		'EEEEEC' 'CC0000' '4E9A06' 'C4A000' '3465A4' '75507B' '06989A' '2E3436' 
+		"9: Bright Red" "10: Bright Green" "11: Bright Yellow" "12: Bright Blue" "13: Bright Magenta" "14: Bright Cyan" "15: Bright Black"
+		'555753' 'EF2929' '8AE234' 'FCE94F' '729FCF' 'AD7FA8' '34E2E2' '555753' ) 
+		collect: [ :each | GdkRGBA fromHexString: each ]. 
+
+	self innerWidgetDo: [ :w | 
+		w colorForeground: nil 
+		background: Color white 
+		palette: palette ]
+]
+
 { #category : 'api' }
 GtkTerminalAdapter >> charSize [
 

@@ -34,11 +34,23 @@ VteTerminalPresenter >> backgroundColor: aColor [
 	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter backgroundColor: aColor ]
 ]
 
+{ #category : 'theme' }
+VteTerminalPresenter >> beDarkTheme [
+
+	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter beDarkTheme ]
+]
+
 { #category : 'api' }
 VteTerminalPresenter >> beEditable [
 	"Allow edition (deny readonly)."
 
 	self editable: true
+]
+
+{ #category : 'theme' }
+VteTerminalPresenter >> beLightTheme [
+
+	self withAdapterPerformOrDefer: [ :anAdapter | anAdapter beLightTheme ]
 ]
 
 { #category : 'api' }
