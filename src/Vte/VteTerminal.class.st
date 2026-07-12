@@ -580,21 +580,29 @@ VteTerminal >> spawnAsyncDefaultWorkingDirectory: working_directory argv: argv e
 ]
 
 { #category : 'accessing - spawn' }
-VteTerminal >> spawnAsyncDefaultWorkingDirectory: working_directory command: command spawnFlags: spaen_flags childSetup: child_setup childSetupData:  child_setup_data childDestroyNotify: child_setup_data_destroy timeout: timeout cancellable: cancellable callback: callback data: user_data [
-	| argv commandArg |
+VteTerminal >> spawnAsyncDefaultWorkingDirectory: working_directory 
+	command: command
+	arguments: arguments
+	spawnFlags: spawn_flags 
+	childSetup: child_setup 
+	childSetupData:  child_setup_data 
+	childDestroyNotify: child_setup_data_destroy 
+	timeout: timeout 
+	cancellable: cancellable 
+	callback: callback 
+	data: user_data [
 	
-	commandArg := ExternalAddress fromString: command.
-	argv := ExternalAddress allocate: (FFIExternalType pointerSize * 2).
-	argv pointerAt: 1 put: commandArg.
-	argv pointerAt: (1 + FFIExternalType pointerSize) put: ExternalAddress null.
-
+	| argv |
+	
+	argv := ExternalAddress arrayOfStringsFrom: { command }, arguments. 
+	
 	[
 		self 
 			spawnAsync: VTE_PTY_DEFAULT 
 			workingDirectory: working_directory
 			argv: argv 
 			envv: ExternalAddress null 
-			spawnFlags: spaen_flags 
+			spawnFlags: spawn_flags 
 			childSetup: child_setup 
 			childSetupData:  child_setup_data 
 			childDestroyNotify: child_setup_data_destroy 
@@ -603,8 +611,25 @@ VteTerminal >> spawnAsyncDefaultWorkingDirectory: working_directory command: com
 			callback: callback
 			data: user_data ]
 	ensure: [
-		argv free.
-		commandArg free ].
+		argv freeArrayOfStrings ]
+]
+
+{ #category : 'accessing - spawn' }
+VteTerminal >> spawnAsyncDefaultWorkingDirectory: working_directory command: command spawnFlags: spawn_flags childSetup: child_setup childSetupData:  child_setup_data childDestroyNotify: child_setup_data_destroy timeout: timeout cancellable: cancellable callback: callback data: user_data [
+	
+
+	self 
+		spawnAsyncDefaultWorkingDirectory: working_directory 
+		command: command 
+		arguments: #()
+		spawnFlags: spawn_flags 
+		childSetup: child_setup 
+		childSetupData: child_setup_data 
+		childDestroyNotify: child_setup_data_destroy 
+		timeout: timeout 
+		cancellable: cancellable 
+		callback: callback 
+		data: user_data
 ]
 
 { #category : 'accessing' }

@@ -354,6 +354,7 @@ GtkTerminalAdapter >> spawnAsync: aCommand workingDirectory: workingDirectory ar
 		w 
 			spawnAsyncDefaultWorkingDirectory: workingDirectory 
 			command: aCommand
+			arguments: (aCollection ifNil: [ #() ])
 			spawnFlags: G_SPAWN_DEFAULT
 			childSetup: ExternalAddress null 
 			childSetupData:  ExternalAddress null  
