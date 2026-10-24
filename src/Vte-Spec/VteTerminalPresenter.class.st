@@ -161,9 +161,38 @@ VteTerminalPresenter >> feedBytes: aByteArray [
 ]
 
 { #category : 'api' }
+VteTerminalPresenter >> feedChild: aString [
+
+	self withAdapterPerformOrDefer: [ :anAdapter | 
+		anAdapter innerWidgetDo: [ :widget | widget feedChild: aString ] ]
+]
+
+{ #category : 'api' }
+VteTerminalPresenter >> feedChildLine: aString [
+	"Sends aString to the terminal's child"
+
+	self feedChild: aString.
+	self feedChild: String cr
+]
+
+{ #category : 'api' }
+VteTerminalPresenter >> feedChildMultipleLine: aString [
+	"Sends aString to the terminal's child as a pasted, submitted input
+	line, bracketed by paste-mode control sequences and terminated with
+	carriage returns. Returns the result of the final write.
+	This method allow users to send a multiple-line string"
+
+	self feedChild: Character escape asString, '[2004h'.
+	self feedChild: aString.
+	self feedChild: Character escape asString, '[2004l'.
+	self feedChild: String cr. "first end line" 
+	self feedChild: String cr  "now send"
+]
+
+{ #category : 'api' }
 VteTerminalPresenter >> feedLine: aString [
 
-	^ self feed: aString, String cr
+	^ self feed: aString, OSPlatform current lineEnding
 ]
 
 { #category : 'api - ansi' }
@@ -272,6 +301,15 @@ VteTerminalPresenter >> whenChildExitedDo: aBlock [
 
 	self announcer 
 		when: VteChildExited 
+		do: aBlock 
+		for: aBlock receiver
+]
+
+{ #category : 'api - events' }
+VteTerminalPresenter >> whenChildReadyDo: aBlock [
+
+	self announcer 
+		when: VteChildReady 
 		do: aBlock 
 		for: aBlock receiver
 ]

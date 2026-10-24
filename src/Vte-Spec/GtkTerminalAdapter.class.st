@@ -44,6 +44,12 @@ GtkTerminalAdapter >> announceChildExited: status [
 		self presenter announce: (VteChildExited newStatus: status) ]
 ]
 
+{ #category : 'private' }
+GtkTerminalAdapter >> announceSpawnReady: aProgram [
+
+	self presenter announcer announce: (VteChildReady on: aProgram)
+]
+
 { #category : 'api - ansi' }
 GtkTerminalAdapter >> backgroundColor: aColor [
 
@@ -340,6 +346,17 @@ GtkTerminalAdapter >> size: aPoint [
 
 { #category : 'api' }
 GtkTerminalAdapter >> spawnAsync: aCommand workingDirectory: workingDirectory arguments: aCollection [
+	
+	^ self 
+		spawnAsync: aCommand
+		workingDirectory: workingDirectory
+		arguments: aCollection
+		ready: [ :program |
+			self announceSpawnReady: program ]
+]
+
+{ #category : 'api' }
+GtkTerminalAdapter >> spawnAsync: aCommand workingDirectory: workingDirectory arguments: aCollection ready: readyBlock [
 	| readyCallback |
 
 	programs ifNil: [ programs := OrderedCollection new ].
@@ -348,7 +365,8 @@ GtkTerminalAdapter >> spawnAsync: aCommand workingDirectory: workingDirectory ar
 		block: [ :selfHandle :pid :error :user_data | 
 			error isNull ifFalse: [ 
 				self error: ('Spawn failed: {1}' format: { (GError fromHandle: error) messageString }) ].
-			programs add: { aCommand. pid } ]. 
+			programs add: { aCommand. pid }.
+			readyBlock cull: aCommand cull: pid ]. 
 
 	self innerWidgetDo: [ :w | 
 		w 

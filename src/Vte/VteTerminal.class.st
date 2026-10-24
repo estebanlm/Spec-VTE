@@ -283,7 +283,9 @@ VteTerminal >> feedBytes: aByteArray length: length [
 { #category : 'accessing' }
 VteTerminal >> feedChild: aString [
 
-	self feedChild: aString length: -1
+	self 
+		feedChild: aString
+		length: aString size
 ]
 
 { #category : 'accessing' }
