@@ -1,3 +1,28 @@
+"
+I am a Spec presenter for an embedded terminal emulator. I expose a terminal (screen with rows, columns, cursor, colours, and optional editing) to Spec user interfaces, and delegate the actual rendering and child-process handling to a backend adapter that Spec creates from my `adapterName`.
+
+My responsibilities are:
+
+- Feeding output into the terminal (`feed:`, `feedBytes:`) and sending input to a child process (`feedChild:`, `feedChildLine:`).
+- Spawning a child process asynchronously (`spawnAsync:workingDirectory:arguments:`) and reacting to its lifecycle with `whenChildReadyDo:` and `whenChildExitedDo:`.
+- Appearance and cursor control: light and dark themes, foreground and background colours, and cursor visibility and position.
+- Decorations, added with `addDecoration:`, which the adapter applies to the rendered terminal. `withHyperlinks` is an example.
+- Clipboard actions (copy, copy as HTML, paste) and the `editable` flag.
+
+Calls made before the adapter exists are deferred through `withAdapterPerformOrDefer:` rather than dropped, so a terminal can be configured before it is opened. Each decoration is given the presenter when it is added.
+
+Collaborators: `SpAbstractWidgetPresenter` (the Spec base class), the backend adapter (`GtkTerminalAdapter` in this package), `VteTerminalDecoration` and its hyperlink subclass, and the `VteChildReady`, `VteChildExited`, and `VteHyperlinkPressed` events.
+
+Example:
+
+```smalltalk
+terminal := VteTerminalPresenter new withHyperlinks.
+terminal spawnAsync: '/bin/bash' workingDirectory: '/home/user' arguments: #().
+terminal feedChildLine: 'ls -la'.
+```
+
+Usage references: none in the loaded image; the class is only referenced from its own package, `Vte-Spec`.
+"
 Class {
 	#name : 'VteTerminalPresenter',
 	#superclass : 'SpAbstractWidgetPresenter',
